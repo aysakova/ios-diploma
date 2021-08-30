@@ -27,9 +27,29 @@ class InfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         infoTableView.dataSource = self
-        infoTableView.register(HeaderInfoTableCell.self, forCellReuseIdentifier: String(describing: HeaderInfoTableCell.self))
+        infoTableView.register(HeaderInfoTableViewCell.self, forCellReuseIdentifier: String(describing: HeaderInfoTableViewCell.self))
+        infoTableView.register(BodyInfoTableViewCell.self, forCellReuseIdentifier: String(describing: BodyInfoTableViewCell.self))
+
+        setupTableView()
     }
     
+}
+
+extension InfoViewController {
+    private func setupTableView() {
+        
+        view.addSubview(infoTableView)
+        infoTableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let constraints = [
+            infoTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            infoTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            infoTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            infoTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+        ]
+        
+        NSLayoutConstraint.activate(constraints)
+    }
 }
 
 extension InfoViewController: UITableViewDataSource {
@@ -40,7 +60,7 @@ extension InfoViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch CellView(cellView: indexPath.row) {
         case .Header:
-            let cell = infoTableView.dequeueReusableCell(withIdentifier: String(describing: HeaderInfoTableCell.self), for: indexPath) as! HeaderInfoTableCell
+            let cell = infoTableView.dequeueReusableCell(withIdentifier: String(describing: HeaderInfoTableViewCell.self), for: indexPath) as! HeaderInfoTableViewCell
             return cell
         case .Body:
             let cell = infoTableView.dequeueReusableCell(withIdentifier: String(describing: BodyInfoTableViewCell.self), for: indexPath) as! BodyInfoTableViewCell
@@ -49,8 +69,6 @@ extension InfoViewController: UITableViewDataSource {
             return UITableViewCell()
         }
     }
-    
-    
 }
 
 //    private let scrollView = UIScrollView()

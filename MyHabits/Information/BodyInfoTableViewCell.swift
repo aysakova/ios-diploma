@@ -7,14 +7,38 @@
 
 import UIKit
 
-class BodyInfoTableViewCell: UIView {
-
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+class BodyInfoTableViewCell: UITableViewCell {
+    
+    private lazy var bodyLabel: UILabel = {
+        let label = UILabel()
+        label.text = AppInfo.myInfo.headerText
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupTableCellView()
     }
-    */
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupTableCellView()
+    }
+}
 
+extension BodyInfoTableViewCell {
+    private func setupTableCellView() {
+        contentView.addSubview(bodyLabel)
+        contentView.clipsToBounds = true
+        
+        let constraints = [
+            bodyLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            bodyLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
+            bodyLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            bodyLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+        ]
+        
+        NSLayoutConstraint.activate(constraints)
+    }
 }
