@@ -13,13 +13,12 @@ class InfoViewController: UIViewController {
     private let infoTableView = UITableView(frame: .zero, style: .plain)
     
     private enum CellView {
-        case Header, Body, unknown
+        case Header, Body
         
-        init (cellView: Int) {
-            switch cellView {
+        init (cellIndexPathRow: Int) {
+            switch cellIndexPathRow {
             case 0: self = .Header
-            case 1: self = .Body
-            default: self = .unknown
+            default: self = .Body
             }
         }
     }
@@ -30,13 +29,13 @@ class InfoViewController: UIViewController {
         infoTableView.register(HeaderInfoTableViewCell.self, forCellReuseIdentifier: String(describing: HeaderInfoTableViewCell.self))
         infoTableView.register(BodyInfoTableViewCell.self, forCellReuseIdentifier: String(describing: BodyInfoTableViewCell.self))
 
-        setupTableView()
+        setupView()
     }
     
 }
 
 extension InfoViewController {
-    private func setupTableView() {
+    private func setupView() {
         
         view.addSubview(infoTableView)
         infoTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -58,15 +57,13 @@ extension InfoViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch CellView(cellView: indexPath.row) {
+        switch CellView(cellIndexPathRow: indexPath.row) {
         case .Header:
             let cell = infoTableView.dequeueReusableCell(withIdentifier: String(describing: HeaderInfoTableViewCell.self), for: indexPath) as! HeaderInfoTableViewCell
             return cell
         case .Body:
             let cell = infoTableView.dequeueReusableCell(withIdentifier: String(describing: BodyInfoTableViewCell.self), for: indexPath) as! BodyInfoTableViewCell
             return cell
-        case .unknown:
-            return UITableViewCell()
         }
     }
 }
