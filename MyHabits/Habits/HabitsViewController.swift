@@ -25,9 +25,10 @@ class HabitsViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .orange // remove
+        collectionView.backgroundColor = .systemGray6
         collectionView.dataSource = self
         collectionView.delegate = self
+//        collectionView.register(HeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: String(describing: HeaderCollectionReusableView.self))
         collectionView.register(ProgressCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: ProgressCollectionViewCell.self))
         collectionView.register(HabitCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: HabitCollectionViewCell.self))
         return collectionView
@@ -36,8 +37,23 @@ class HabitsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        setupNavigation()
     }
 }
+
+extension HabitsViewController {
+    private func setupNavigation() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
+        
+    }
+    
+    @objc private func addButtonTapped() {
+        let vc = HabitViewController()
+        let navVC = UINavigationController(rootViewController: vc)
+        self.navigationController?.present(navVC, animated: true, completion: nil)
+    }
+}
+
 
 extension HabitsViewController {
     private func setupView() {
@@ -72,7 +88,14 @@ extension HabitsViewController: UICollectionViewDataSource {
         }
     }
     
+//    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+//        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: String(describing: HeaderCollectionReusableView.self), for: indexPath)
+//        return header
+//    }
     
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+//        CGSize(width: view.frame.width, height: 40)
+//    }
 }
 
 extension HabitsViewController: UICollectionViewDelegateFlowLayout {
@@ -82,5 +105,12 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         12
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        
+        let vc = HabitDetailsViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

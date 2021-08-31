@@ -24,14 +24,20 @@
             </objects>
             <point key="canvasLocation" x="-435" y="-548"/>
         </scene>
-        <!--Item-->
+        <!--Привычки-->
         <scene sceneID="Xj4-In-wG6">
             <objects>
-                <navigationController id="9IK-my-LSy" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="waF-dr-MSm"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="b07-pW-Vrz">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                <navigationController title="Привычки" id="9IK-my-LSy" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Привычки" id="waF-dr-MSm"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="b07-pW-Vrz">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <textAttributes key="titleTextAttributes">
+                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
+                        </textAttributes>
                     </navigationBar>
                     <connections>
                         <segue destination="iTT-rE-xDi" kind="relationship" relationship="rootViewController" id="6tm-qm-JcF"/>
@@ -59,7 +65,7 @@
             </objects>
             <point key="canvasLocation" x="-1258" y="-117"/>
         </scene>
-        <!--Habits View Controller-->
+        <!--Сегодня-->
         <scene sceneID="KNk-7D-UnB">
             <objects>
                 <viewController id="iTT-rE-xDi" customClass="HabitsViewController" customModule="MyHabits" customModuleProvider="target" sceneMemberID="viewController">
@@ -67,22 +73,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="uNQ-BL-pTu"/>
-                        <color key="backgroundColor" systemColor="systemPinkColor"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="qWN-JM-gSl"/>
+                    <navigationItem key="navigationItem" title="Сегодня" id="VKA-3G-4jc"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="61M-sm-DUV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="461" y="172"/>
+            <point key="canvasLocation" x="368" y="157"/>
         </scene>
     </scenes>
     <resources>
         <image name="info.circle.fill" catalog="system" width="128" height="121"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemPinkColor">
-            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
