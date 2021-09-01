@@ -10,7 +10,7 @@ import UIKit
 
 class InfoViewController: UIViewController {
     
-    private let infoTableView = UITableView(frame: .zero, style: .plain)
+    private let tableView = UITableView(frame: .zero, style: .plain)
     
     private enum CellView {
         case Header, Body
@@ -25,9 +25,9 @@ class InfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        infoTableView.dataSource = self
-        infoTableView.register(HeaderInfoTableViewCell.self, forCellReuseIdentifier: String(describing: HeaderInfoTableViewCell.self))
-        infoTableView.register(BodyInfoTableViewCell.self, forCellReuseIdentifier: String(describing: BodyInfoTableViewCell.self))
+        tableView.dataSource = self
+        tableView.register(HeaderInfoTableViewCell.self, forCellReuseIdentifier: String(describing: HeaderInfoTableViewCell.self))
+        tableView.register(BodyInfoTableViewCell.self, forCellReuseIdentifier: String(describing: BodyInfoTableViewCell.self))
 
         setupView()
     }
@@ -37,14 +37,14 @@ class InfoViewController: UIViewController {
 extension InfoViewController {
     private func setupView() {
         
-        view.addSubview(infoTableView)
-        infoTableView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         
         let constraints = [
-            infoTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            infoTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            infoTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            infoTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ]
         
         NSLayoutConstraint.activate(constraints)
@@ -59,10 +59,10 @@ extension InfoViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch CellView(cellIndexPathRow: indexPath.row) {
         case .Header:
-            let cell = infoTableView.dequeueReusableCell(withIdentifier: String(describing: HeaderInfoTableViewCell.self), for: indexPath) as! HeaderInfoTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: HeaderInfoTableViewCell.self), for: indexPath) as! HeaderInfoTableViewCell
             return cell
         case .Body:
-            let cell = infoTableView.dequeueReusableCell(withIdentifier: String(describing: BodyInfoTableViewCell.self), for: indexPath) as! BodyInfoTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: BodyInfoTableViewCell.self), for: indexPath) as! BodyInfoTableViewCell
             return cell
         }
     }
