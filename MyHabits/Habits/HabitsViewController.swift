@@ -10,6 +10,8 @@ import UIKit
 
 class HabitsViewController: UIViewController {
     
+    private var store = HabitsStore.shared
+    
     private enum CellView {
         case Progress, Habit
         
@@ -21,14 +23,13 @@ class HabitsViewController: UIViewController {
         }
     }
 
-    private lazy var habitsCollectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .systemGray6
         collectionView.dataSource = self
         collectionView.delegate = self
-//        collectionView.register(HeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: String(describing: HeaderCollectionReusableView.self))
         collectionView.register(ProgressCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: ProgressCollectionViewCell.self))
         collectionView.register(HabitCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: HabitCollectionViewCell.self))
         return collectionView
@@ -38,6 +39,7 @@ class HabitsViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         setupNavigation()
+        
     }
 }
 
@@ -50,6 +52,7 @@ extension HabitsViewController {
     @objc private func addButtonTapped() {
         let vc = HabitViewController()
         let navVC = UINavigationController(rootViewController: vc)
+        vc.title = "Создать"
         self.navigationController?.present(navVC, animated: true, completion: nil)
     }
 }
@@ -57,14 +60,14 @@ extension HabitsViewController {
 
 extension HabitsViewController {
     private func setupView() {
-        view.addSubview(habitsCollectionView)
-        habitsCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(collectionView)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         let constraints = [
-            habitsCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            habitsCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            habitsCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            habitsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
         ]
         NSLayoutConstraint.activate(constraints)
@@ -74,28 +77,20 @@ extension HabitsViewController {
 
 extension HabitsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        6
+//        return myHabits.count
+        return 4
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch CellView(cellIndexPathRow: indexPath.row) {
         case .Progress:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ProgressCollectionViewCell.self), for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ProgressCollectionViewCell.self), for: indexPath) as! ProgressCollectionViewCell
             return cell
         case .Habit:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HabitCollectionViewCell.self), for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HabitCollectionViewCell.self), for: indexPath) as! HabitCollectionViewCell
             return cell
         }
     }
-    
-//    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-//        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: String(describing: HeaderCollectionReusableView.self), for: indexPath)
-//        return header
-//    }
-    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-//        CGSize(width: view.frame.width, height: 40)
-//    }
 }
 
 extension HabitsViewController: UICollectionViewDelegateFlowLayout {

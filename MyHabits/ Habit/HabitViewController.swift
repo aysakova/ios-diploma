@@ -9,6 +9,8 @@ import UIKit
 
 class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
     
+    private var habit: Habit?
+
     private var nameLabel: UILabel = {
         let label = UILabel()
         label.text = "НАЗВАНИЕ"
@@ -45,7 +47,7 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         return label
     }()
     
-    private var inputTextField: UITextField = {
+    private var timePickTextField: UITextField = {
         let text = UITextField()
         text.translatesAutoresizingMaskIntoConstraints = false
         text.placeholder = "Выбрать время"
@@ -61,18 +63,23 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         picker.addTarget(self, action: #selector(timeChanged), for: .valueChanged)
         return picker
     }()
-    
+    private var deleteHabitButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Delete", for: .normal)
+        return button
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.title = "Создать" // change to code
         
         view.backgroundColor = .white
         
         setupView()
         configureNavigationBar()
         createTapGesture()
+        
+        habitNameTextField.delegate = self
+        timePickTextField.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -101,12 +108,21 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     }
     
     @objc private func saveButtonTapped() {
+        habitNameTextField.resignFirstResponder()
+        if let text = habitNameTextField.text {
+            habit?.name = text
+            print(text)
+        }
+        if let inputText = habitNameTextField.text {
+            habit?.name = inputText
+        }
+        dismiss(animated: true, completion: nil)
     }
     
     @objc func timeChanged(timePicker: UIDatePicker) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mm a"
-        inputTextField.text = dateFormatter.string(from: timePicker.date)
+        timePickTextField.text = dateFormatter.string(from: timePicker.date)
     }
     
     @objc private func viewTapped() {
@@ -132,7 +148,7 @@ extension HabitViewController {
         view.addSubview(colorLabel)
         view.addSubview(colorCircleButton)
         view.addSubview(timeLabel)
-        view.addSubview(inputTextField)
+        view.addSubview(timePickTextField)
         view.addSubview(timePicker)
         
         colorCircleButton.layer.cornerRadius = 30 / 2
@@ -156,19 +172,31 @@ extension HabitViewController {
             timeLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             timeLabel.topAnchor.constraint(equalTo: colorCircleButton.bottomAnchor, constant: 15),
             
-            inputTextField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            inputTextField.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 15),
-            inputTextField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            inputTextField.heightAnchor.constraint(equalToConstant: 50),
+            timePickTextField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            timePickTextField.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 15),
+            timePickTextField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            timePickTextField.heightAnchor.constraint(equalToConstant: 50),
             
             timePicker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            timePicker.topAnchor.constraint(equalTo: inputTextField.bottomAnchor),
+            timePicker.topAnchor.constraint(equalTo: timePickTextField.bottomAnchor),
             timePicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             timePicker.heightAnchor.constraint(equalToConstant: 250),
-    
+            
+//            deleteHabitButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+//            deleteHabitButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+//            deleteHabitButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+//            deleteHabitButton.heightAnchor.constraint(equalToConstant: 50),
+//
         ]
         
         NSLayoutConstraint.activate(constraints)
     }
 }
 
+extension HabitViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        habitNameTextField.resignFirstResponder()
+        return true
+    }
+    
+}

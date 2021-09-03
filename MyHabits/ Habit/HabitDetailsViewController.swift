@@ -10,7 +10,7 @@ import UIKit
 class HabitDetailsViewController: UIViewController {
     
     private lazy var tableView: UITableView = {
-        let view = UITableView()
+        let view = UITableView(frame: .zero, style: .grouped)
         view.dataSource = self
         view.delegate = self
         return view
@@ -22,14 +22,19 @@ class HabitDetailsViewController: UIViewController {
         view.backgroundColor = .white
         
         setupView()
+        configureNavigation()
         
         self.title = "Некоторая привычка" //change to code
         
+        tableView.tableFooterView = UIView()
+    }
+    
+    
+    private func configureNavigation() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Править", style: .done, target: self, action: #selector(editButtonTapped))
         
         navigationItem.largeTitleDisplayMode = .never
     }
-    
     @objc private func cancelButtonTapped() {
         self.navigationController?.popViewController(animated: true)
     }
@@ -37,6 +42,7 @@ class HabitDetailsViewController: UIViewController {
     @objc private func editButtonTapped() {
         let vc = HabitViewController()
         let navVC = UINavigationController(rootViewController: vc)
+        vc.title = self.title
         self.navigationController?.present(navVC, animated: true, completion: nil)
     }
 
@@ -61,11 +67,11 @@ extension HabitDetailsViewController {
 
 extension HabitDetailsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        4
+            return 4
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        1
+        return 1
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
@@ -73,7 +79,8 @@ extension HabitDetailsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "АКТИВНОСТЬ"
+        guard section != 0 else {return "АКТИВНОСТЬ"}
+        return nil
     }
 }
 
