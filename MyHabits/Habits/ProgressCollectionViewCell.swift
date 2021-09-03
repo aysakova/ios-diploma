@@ -11,7 +11,7 @@ class ProgressCollectionViewCell: UICollectionViewCell {
     
 //    private var progressInfo: Habit {
 //        didSet {
-//            percentOfCOmpletionLabel.text = Habit.t
+//
 //        }
 //    }
     

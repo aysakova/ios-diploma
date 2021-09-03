@@ -77,17 +77,20 @@ extension HabitsViewController {
 
 extension HabitsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return myHabits.count
-        return 4
+        return store.habits.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch CellView(cellIndexPathRow: indexPath.row) {
         case .Progress:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ProgressCollectionViewCell.self), for: indexPath) as! ProgressCollectionViewCell
+            
             return cell
+            
         case .Habit:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HabitCollectionViewCell.self), for: indexPath) as! HabitCollectionViewCell
+            cell.habitNameLabel.text = store.habits[indexPath.row].name
+            cell.checkmarkImage.layer.borderColor = store.habits[indexPath.row].color.cgColor
             return cell
         }
     }

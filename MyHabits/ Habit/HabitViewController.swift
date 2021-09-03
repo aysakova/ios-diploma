@@ -9,7 +9,7 @@ import UIKit
 
 class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
     
-    private var habit: Habit?
+    private var store = HabitsStore.shared
 
     private var nameLabel: UILabel = {
         let label = UILabel()
@@ -35,7 +35,7 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     private var colorCircleButton: UIButton = {
         let image = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.backgroundColor = .brown
+        image.backgroundColor = .red
         image.addTarget(self, action: #selector(chooseColor), for: .touchUpInside)
         return image
     }()
@@ -63,6 +63,7 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         picker.addTarget(self, action: #selector(timeChanged), for: .valueChanged)
         return picker
     }()
+    
     private var deleteHabitButton: UIButton = {
         let button = UIButton()
         button.setTitle("Delete", for: .normal)
@@ -80,6 +81,7 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         
         habitNameTextField.delegate = self
         timePickTextField.delegate = self
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -108,13 +110,10 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     }
     
     @objc private func saveButtonTapped() {
-        habitNameTextField.resignFirstResponder()
-        if let text = habitNameTextField.text {
-            habit?.name = text
-            print(text)
-        }
-        if let inputText = habitNameTextField.text {
-            habit?.name = inputText
+        
+        if habitNameTextField.text != nil {
+            let newHabit = Habit(name: habitNameTextField.text!, date: Date(), color: colorCircleButton.backgroundColor!)
+            store.habits.append(newHabit)
         }
         dismiss(animated: true, completion: nil)
     }
@@ -139,6 +138,7 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         let color = viewController.selectedColor
         colorCircleButton.backgroundColor = color
     }
+    
 }
 
 extension HabitViewController {

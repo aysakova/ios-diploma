@@ -9,6 +9,7 @@ import UIKit
 
 class HabitDetailsViewController: UIViewController {
     
+    private var habit = HabitsStore.shared
     private lazy var tableView: UITableView = {
         let view = UITableView(frame: .zero, style: .grouped)
         view.dataSource = self
@@ -24,7 +25,7 @@ class HabitDetailsViewController: UIViewController {
         setupView()
         configureNavigation()
         
-        self.title = "Некоторая привычка" //change to code
+        self.title = habit.habits[0].name // 
         
         tableView.tableFooterView = UIView()
     }

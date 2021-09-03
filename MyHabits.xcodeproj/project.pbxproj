@@ -168,6 +168,7 @@
 		6A08600826DCB8FF008FF55E /* Habits */ = {
 			isa = PBXGroup;
 			children = (
+				6AE63E8026DE450100438EA4 /* HabitDetailsViewController.swift */,
 				6A085FC526DC8F1D008FF55E /* HabitsViewController.swift */,
 				6A08600926DCBF70008FF55E /* ProgressCollectionViewCell.swift */,
 				6A08600B26DCBF84008FF55E /* HabitCollectionViewCell.swift */,
@@ -181,7 +182,6 @@
 			children = (
 				6AE63E7E26DE443000438EA4 /* HabitViewController.swift */,
 				6A258EF926E078CB0092767D /* HabitView.swift */,
-				6AE63E8026DE450100438EA4 /* HabitDetailsViewController.swift */,
 			);
 			path = " Habit";
 			sourceTree = "<group>";

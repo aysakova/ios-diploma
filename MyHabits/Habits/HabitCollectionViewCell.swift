@@ -16,29 +16,29 @@ class HabitCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    private var habitNameLabel: UILabel = {
+    var habitNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Некоторая привычка"
+//        label.text = "Некоторая привычка"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         return label
     }()
     
-    private var frequencyTimeLabel: UILabel = {
+    var frequencyTimeLabel: UILabel = {
         let label = UILabel()
         label.text = "Каждый день в 00:00"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private var counterLabel: UILabel = {
+    var counterLabel: UILabel = {
         let label = UILabel()
         label.text = "Счетчик: 0"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private var checkmarkImage: UIImageView = {
+    var checkmarkImage: UIImageView = {
         let image = UIImageView(image: UIImage(named: "circle"))
         image.layer.borderWidth = 2
         image.layer.borderColor = UIColor.black.cgColor
