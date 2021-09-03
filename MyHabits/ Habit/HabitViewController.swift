@@ -7,9 +7,14 @@
 
 import UIKit
 
+protocol AddHabitDelegate {
+    func addHabit(habit: Habit)
+}
+
 class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
     
     private var store = HabitsStore.shared
+    var delegate: AddHabitDelegate?
 
     private var nameLabel: UILabel = {
         let label = UILabel()
@@ -111,10 +116,14 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     
     @objc private func saveButtonTapped() {
         
-        if habitNameTextField.text != nil {
-            let newHabit = Habit(name: habitNameTextField.text!, date: Date(), color: colorCircleButton.backgroundColor!)
-            store.habits.append(newHabit)
+        guard let text = habitNameTextField.text, habitNameTextField.hasText else {
+            print("Ошибка")
+            return
         }
+        let newHabit = Habit(name: text, date: Date(), color: colorCircleButton.backgroundColor!)
+//            store.habits.append(newHabit)
+        delegate?.addHabit(habit: newHabit)
+        
         dismiss(animated: true, completion: nil)
     }
     

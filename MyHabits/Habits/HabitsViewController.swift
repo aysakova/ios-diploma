@@ -51,6 +51,7 @@ extension HabitsViewController {
     
     @objc private func addButtonTapped() {
         let vc = HabitViewController()
+        vc.delegate = self
         let navVC = UINavigationController(rootViewController: vc)
         vc.title = "Создать"
         self.navigationController?.present(navVC, animated: true, completion: nil)
@@ -111,4 +112,14 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout {
         let vc = HabitDetailsViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }
+}
+
+extension HabitsViewController: AddHabitDelegate {
+    func addHabit(habit: Habit) {
+        self.dismiss(animated: true, completion: nil)
+        store.habits.append(habit)
+        self.collectionView.reloadData()
+    }
+    
+    
 }
