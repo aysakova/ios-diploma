@@ -23,18 +23,17 @@ class HabitDetailsViewController: UIViewController {
         view.backgroundColor = .white
         
         setupView()
-        configureNavigation()
-        
-        self.title = habit.habits[0].name // 
+        setupNavigation()
         
         tableView.tableFooterView = UIView()
     }
     
     
-    private func configureNavigation() {
+    private func setupNavigation() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Править", style: .done, target: self, action: #selector(editButtonTapped))
         
         navigationItem.largeTitleDisplayMode = .never
+        navigationController?.navigationBar.tintColor = .purple
     }
     @objc private func cancelButtonTapped() {
         self.navigationController?.popViewController(animated: true)
@@ -43,7 +42,9 @@ class HabitDetailsViewController: UIViewController {
     @objc private func editButtonTapped() {
         let vc = HabitViewController()
         let navVC = UINavigationController(rootViewController: vc)
-        vc.title = self.title
+        vc.title = "Править"
+        vc.habitNameTextField.text = self.title
+        
         self.navigationController?.present(navVC, animated: true, completion: nil)
     }
 
@@ -89,4 +90,6 @@ extension HabitDetailsViewController: UITableViewDelegate {
 
 }
 
+
+//
 

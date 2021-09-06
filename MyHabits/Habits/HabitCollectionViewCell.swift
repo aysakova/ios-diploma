@@ -7,52 +7,65 @@
 
 import UIKit
 
+protocol TapButtonDelegate {
+    func didTapButton(cell: HabitCollectionViewCell)
+}
+
 class HabitCollectionViewCell: UICollectionViewCell {
     
-    private var cellBackgroundView: UIView = {
+    var delegate: TapButtonDelegate?
+    
+    private lazy var cellBackgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    var habitNameLabel: UILabel = {
+    lazy var habitNameLabel: UILabel = {
         let label = UILabel()
-//        label.text = "Некоторая привычка"
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "SFProText-Semibold", size: 17)
         label.numberOfLines = 0
         return label
     }()
     
-    var frequencyTimeLabel: UILabel = {
+    lazy var frequencyTimeLabel: UILabel = {
         let label = UILabel()
-        label.text = "Каждый день в 00:00"
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "SFProText-Regular", size: 13)
+        label.textColor = .systemGray2
         return label
     }()
     
-    var counterLabel: UILabel = {
+    lazy var counterLabel: UILabel = {
         let label = UILabel()
         label.text = "Счетчик: 0"
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "SFProText-Regular", size: 13)
+        label.textColor = .systemGray2
         return label
     }()
     
-    var checkmarkImage: UIImageView = {
-        let image = UIImageView(image: UIImage(named: "circle"))
-        image.layer.borderWidth = 2
-        image.layer.borderColor = UIColor.black.cgColor
-        image.clipsToBounds = true
-//        image.frame.size = CGSize(width: 38, height: 38)
-        image.translatesAutoresizingMaskIntoConstraints = false
-        return image
+    lazy var checkmarkButton: UIButton = {
+        let button = UIButton()
+//        button.setBackgroundImage(UIImage(systemName: "circle"), for: .normal)
+        button.layer.borderWidth = 2
+        button.clipsToBounds = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
+        return button
     }()
+    
+    @objc func didTapButton(_ sender: UIButton) {
+        delegate?.didTapButton(cell: self)
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
@@ -65,13 +78,13 @@ extension HabitCollectionViewCell {
         contentView.addSubview(habitNameLabel)
         contentView.addSubview(frequencyTimeLabel)
         contentView.addSubview(counterLabel)
-        contentView.addSubview(checkmarkImage)
+        contentView.addSubview(checkmarkButton)
         
         cellBackgroundView.layer.cornerRadius = 8
         cellBackgroundView.clipsToBounds = true
         
-        checkmarkImage.layer.cornerRadius = 38/2
-        checkmarkImage.clipsToBounds = true
+        checkmarkButton.layer.cornerRadius = 38/2
+        checkmarkButton.clipsToBounds = true
         
         let constraints = [
             cellBackgroundView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
@@ -88,10 +101,10 @@ extension HabitCollectionViewCell {
             counterLabel.leadingAnchor.constraint(equalTo: cellBackgroundView.leadingAnchor, constant: 12),
             counterLabel.bottomAnchor.constraint(equalTo: cellBackgroundView.bottomAnchor, constant: -20),
             
-            checkmarkImage.topAnchor.constraint(equalTo: cellBackgroundView.topAnchor, constant: 46),
-            checkmarkImage.trailingAnchor.constraint(equalTo: cellBackgroundView.trailingAnchor, constant: -25),
-            checkmarkImage.heightAnchor.constraint(equalToConstant: 38),
-            checkmarkImage.widthAnchor.constraint(equalToConstant: 38),
+            checkmarkButton.topAnchor.constraint(equalTo: cellBackgroundView.topAnchor, constant: 46),
+            checkmarkButton.trailingAnchor.constraint(equalTo: cellBackgroundView.trailingAnchor, constant: -25),
+            checkmarkButton.heightAnchor.constraint(equalToConstant: 38),
+            checkmarkButton.widthAnchor.constraint(equalToConstant: 38),
         ]
         
         NSLayoutConstraint.activate(constraints)

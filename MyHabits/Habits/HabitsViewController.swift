@@ -45,11 +45,11 @@ class HabitsViewController: UIViewController {
 
 extension HabitsViewController {
     private func setupNavigation() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAddButton))
         
     }
     
-    @objc private func addButtonTapped() {
+    @objc private func didTapAddButton() {
         let vc = HabitViewController()
         vc.delegate = self
         let navVC = UINavigationController(rootViewController: vc)
@@ -85,32 +85,50 @@ extension HabitsViewController: UICollectionViewDataSource {
         switch CellView(cellIndexPathRow: indexPath.row) {
         case .Progress:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ProgressCollectionViewCell.self), for: indexPath) as! ProgressCollectionViewCell
-            
             return cell
             
         case .Habit:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HabitCollectionViewCell.self), for: indexPath) as! HabitCollectionViewCell
             cell.habitNameLabel.text = store.habits[indexPath.row].name
-            cell.checkmarkImage.layer.borderColor = store.habits[indexPath.row].color.cgColor
+            cell.checkmarkButton.layer.borderColor = store.habits[indexPath.row].color.cgColor
+            cell.habitNameLabel.textColor = store.habits[indexPath.row].color
+            cell.frequencyTimeLabel.text = store.habits[indexPath.row].dateString
+            cell.delegate = self
+            cell.checkmarkButton.isUserInteractionEnabled = true
             return cell
         }
+        
     }
 }
 
 extension HabitsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height / 4)
+        
+        
+        switch CellView(cellIndexPathRow: indexPath.row) {
+        case .Progress:
+            return CGSize(width: collectionView.frame.width, height: 90)
+        case .Habit:
+            return CGSize(width: collectionView.frame.width, height: collectionView.frame.width * 0.350)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        12
+        6
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        6
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         
-        let vc = HabitDetailsViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
+        if indexPath.row != 0 {
+            let vc = HabitDetailsViewController()
+            vc.title = store.habits[indexPath.row].name
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }
 
@@ -120,6 +138,19 @@ extension HabitsViewController: AddHabitDelegate {
         store.habits.append(habit)
         self.collectionView.reloadData()
     }
+}
+
+extension HabitsViewController: TapButtonDelegate {
+    func didTapButton(cell: HabitCollectionViewCell) {
+        if let indexPath = collectionView.indexPath(for: cell) {
+            print(indexPath)
+            cell.checkmarkButton.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
+            cell.checkmarkButton.backgroundColor = UIColor(cgColor: cell.layer.borderColor!)
+            
+        }
+    }
+    
+    
     
     
 }

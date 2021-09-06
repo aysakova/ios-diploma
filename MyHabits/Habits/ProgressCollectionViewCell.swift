@@ -9,40 +9,40 @@ import UIKit
 
 class ProgressCollectionViewCell: UICollectionViewCell {
     
-//    private var progressInfo: Habit {
-//        didSet {
-//
-//        }
-//    }
+    private var habits = HabitsStore.shared
     
-    private var cellBackgroundView: UIView = {
+    private lazy var cellBackgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private var progressMessageLabel: UILabel = {
+    private lazy var progressMessageLabel: UILabel = {
         let label = UILabel()
         label.text = "Все получится!"
+        label.font = UIFont(name: "SFProText-Semibold", size: 13)
+        label.textColor = .systemGray2
+        
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private var percentOfCOmpletionLabel: UILabel = {
+    private lazy var percentOfCompletionLabel: UILabel = {
         let label = UILabel()
-        label.text = "50%"
+//        label.text = "50%"
+        label.font = UIFont(name: "SF-Pro-Text-Semibold", size: 13)
         label.textAlignment = .right
+        label.textColor = .systemGray2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private var progressView: UIProgressView = {
+    private lazy var progressView: UIProgressView = {
         let progressView = UIProgressView(progressViewStyle: .bar)
-        progressView.trackTintColor = .gray
-        progressView.progressTintColor = .orange
+        progressView.trackTintColor = .systemGray2
+        progressView.progressTintColor = .purple
         progressView.translatesAutoresizingMaskIntoConstraints = false
-        progressView.setProgress(0.7, animated: false)
         return progressView
     }()
     
@@ -50,12 +50,14 @@ class ProgressCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
+        configure()
         
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
+        configure()
        
     }
 }
@@ -65,13 +67,16 @@ extension ProgressCollectionViewCell {
         
         contentView.addSubview(cellBackgroundView)
         contentView.addSubview(progressMessageLabel)
-        contentView.addSubview(percentOfCOmpletionLabel)
+        contentView.addSubview(percentOfCompletionLabel)
         contentView.addSubview(progressView)
         
         contentView.clipsToBounds = true
         
         cellBackgroundView.layer.cornerRadius = 8
         cellBackgroundView.clipsToBounds = true
+        
+        progressView.layer.cornerRadius = 3.5
+        progressView.clipsToBounds = true
         
         let constraints = [
             
@@ -85,14 +90,13 @@ extension ProgressCollectionViewCell {
             progressMessageLabel.widthAnchor.constraint(equalTo: cellBackgroundView.widthAnchor, multiplier: 0.67, constant: -12),
             progressMessageLabel.heightAnchor.constraint(equalToConstant: 18),
             
-            percentOfCOmpletionLabel.leadingAnchor.constraint(equalTo: progressMessageLabel.trailingAnchor, constant: 8),
-            percentOfCOmpletionLabel.topAnchor.constraint(equalTo: cellBackgroundView.topAnchor, constant: 10),
-            percentOfCOmpletionLabel.trailingAnchor.constraint(equalTo: cellBackgroundView.trailingAnchor, constant: -12),
-            percentOfCOmpletionLabel.heightAnchor.constraint(equalToConstant: 18),
+            percentOfCompletionLabel.leadingAnchor.constraint(equalTo: progressMessageLabel.trailingAnchor, constant: 8),
+            percentOfCompletionLabel.topAnchor.constraint(equalTo: cellBackgroundView.topAnchor, constant: 10),
+            percentOfCompletionLabel.trailingAnchor.constraint(equalTo: cellBackgroundView.trailingAnchor, constant: -12),
+            percentOfCompletionLabel.heightAnchor.constraint(equalToConstant: 18),
             
             
             progressView.leadingAnchor.constraint(equalTo: cellBackgroundView.leadingAnchor, constant: 12),
-//            progressView.topAnchor.constraint(equalTo: cellBackgroundView.bottomAnchor, constant: 10),
             progressView.trailingAnchor.constraint(equalTo: cellBackgroundView.trailingAnchor, constant: -12),
             progressView.bottomAnchor.constraint(equalTo: cellBackgroundView.bottomAnchor, constant: -15),
             progressView.heightAnchor.constraint(equalToConstant: 7),
@@ -100,5 +104,10 @@ extension ProgressCollectionViewCell {
             ]
         
         NSLayoutConstraint.activate(constraints)
+    }
+    
+    private func configure() {
+        percentOfCompletionLabel.text = "\(Int(habits.todayProgress * 100))%"
+        progressView.setProgress(habits.todayProgress, animated: true)
     }
 }

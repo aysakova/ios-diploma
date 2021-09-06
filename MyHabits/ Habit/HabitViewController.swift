@@ -13,6 +13,7 @@ protocol AddHabitDelegate {
 
 class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
     
+    // MARK: Variable declaration
     private var store = HabitsStore.shared
     var delegate: AddHabitDelegate?
 
@@ -23,7 +24,7 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         return label
     }()
     
-    private var habitNameTextField: UITextField = {
+    var habitNameTextField: UITextField = {
         let text = UITextField()
         text.translatesAutoresizingMaskIntoConstraints = false
         text.placeholder = "Бегать по утрам, спать 8 часов и т.п."
@@ -37,7 +38,7 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         return label
     }()
     
-    private var colorCircleButton: UIButton = {
+    var colorPickerButton: UIButton = {
         let image = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         image.translatesAutoresizingMaskIntoConstraints = false
         image.backgroundColor = .red
@@ -71,21 +72,27 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     
     private var deleteHabitButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Delete", for: .normal)
+        button.setTitle("Удалить", for: .normal)
+        button.setTitleColor(.red, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
+    //MARK: Lifestyle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .white
         
         setupView()
-        configureNavigationBar()
+        setupNavigation()
         createTapGesture()
         
         habitNameTextField.delegate = self
         timePickTextField.delegate = self
+        
+//        let indexOFHabit = store.habits.firstIndex(where: ({$0.name == habitNameTextField.text}))
+//        let habit = store.habits[indexOFHabit!]
+//        habit.color = store.habits[indexOFHabit!].color
 
     }
     
@@ -97,11 +104,12 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         super.viewWillDisappear(animated)
     }
 
-    
-    private func configureNavigationBar() {
+    //MARK: Functions
+    private func setupNavigation() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(cancelButtonTapped))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(saveButtonTapped))
         navigationItem.largeTitleDisplayMode = .never
+        navigationController?.navigationBar.tintColor = .purple
     }
     
     private func createTapGesture() {
@@ -120,8 +128,7 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
             print("Ошибка")
             return
         }
-        let newHabit = Habit(name: text, date: Date(), color: colorCircleButton.backgroundColor!)
-//            store.habits.append(newHabit)
+        let newHabit = Habit(name: text, date: Date(), color: colorPickerButton.backgroundColor!)
         delegate?.addHabit(habit: newHabit)
         
         dismiss(animated: true, completion: nil)
@@ -145,23 +152,27 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
         let color = viewController.selectedColor
-        colorCircleButton.backgroundColor = color
+        colorPickerButton.backgroundColor = color
     }
     
 }
-
+    //MARK: Setup views
 extension HabitViewController {
     private func setupView() {
         view.addSubview(nameLabel)
         view.addSubview(habitNameTextField)
         view.addSubview(colorLabel)
-        view.addSubview(colorCircleButton)
+        view.addSubview(colorPickerButton)
         view.addSubview(timeLabel)
         view.addSubview(timePickTextField)
         view.addSubview(timePicker)
         
-        colorCircleButton.layer.cornerRadius = 30 / 2
-        colorCircleButton.clipsToBounds = true
+        colorPickerButton.layer.cornerRadius = 30 / 2
+        colorPickerButton.clipsToBounds = true
+        
+        if habitNameTextField.text != nil {
+            view.addSubview(deleteHabitButton)
+        }
         
         let constraints = [
             nameLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
@@ -173,13 +184,13 @@ extension HabitViewController {
             colorLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             colorLabel.topAnchor.constraint(equalTo: habitNameTextField.bottomAnchor, constant: 15),
             
-            colorCircleButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            colorCircleButton.topAnchor.constraint(equalTo: colorLabel.bottomAnchor, constant: 7),
-            colorCircleButton.widthAnchor.constraint(equalToConstant: 30),
-            colorCircleButton.heightAnchor.constraint(equalToConstant: 30),
+            colorPickerButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            colorPickerButton.topAnchor.constraint(equalTo: colorLabel.bottomAnchor, constant: 7),
+            colorPickerButton.widthAnchor.constraint(equalToConstant: 30),
+            colorPickerButton.heightAnchor.constraint(equalToConstant: 30),
             
             timeLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            timeLabel.topAnchor.constraint(equalTo: colorCircleButton.bottomAnchor, constant: 15),
+            timeLabel.topAnchor.constraint(equalTo: colorPickerButton.bottomAnchor, constant: 15),
             
             timePickTextField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             timePickTextField.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 15),
@@ -191,11 +202,11 @@ extension HabitViewController {
             timePicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             timePicker.heightAnchor.constraint(equalToConstant: 250),
             
-//            deleteHabitButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-//            deleteHabitButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-//            deleteHabitButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-//            deleteHabitButton.heightAnchor.constraint(equalToConstant: 50),
-//
+            deleteHabitButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            deleteHabitButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            deleteHabitButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            deleteHabitButton.heightAnchor.constraint(equalToConstant: 50),
+
         ]
         
         NSLayoutConstraint.activate(constraints)
