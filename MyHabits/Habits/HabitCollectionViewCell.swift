@@ -49,8 +49,7 @@ class HabitCollectionViewCell: UICollectionViewCell {
     
     lazy var checkmarkButton: UIButton = {
         let button = UIButton()
-//        button.setBackgroundImage(UIImage(systemName: "circle"), for: .normal)
-        button.layer.borderWidth = 2
+        button.setBackgroundImage(UIImage(systemName: "circle"), for: .normal)
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
@@ -82,10 +81,7 @@ extension HabitCollectionViewCell {
         
         cellBackgroundView.layer.cornerRadius = 8
         cellBackgroundView.clipsToBounds = true
-        
-        checkmarkButton.layer.cornerRadius = 38/2
-        checkmarkButton.clipsToBounds = true
-        
+                
         let constraints = [
             cellBackgroundView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             cellBackgroundView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 22),
@@ -101,7 +97,8 @@ extension HabitCollectionViewCell {
             counterLabel.leadingAnchor.constraint(equalTo: cellBackgroundView.leadingAnchor, constant: 12),
             counterLabel.bottomAnchor.constraint(equalTo: cellBackgroundView.bottomAnchor, constant: -20),
             
-            checkmarkButton.topAnchor.constraint(equalTo: cellBackgroundView.topAnchor, constant: 46),
+//            checkmarkButton.topAnchor.constraint(equalTo: cellBackgroundView.topAnchor, constant: 46),
+            checkmarkButton.centerYAnchor.constraint(equalTo: cellBackgroundView.centerYAnchor),
             checkmarkButton.trailingAnchor.constraint(equalTo: cellBackgroundView.trailingAnchor, constant: -25),
             checkmarkButton.heightAnchor.constraint(equalToConstant: 38),
             checkmarkButton.widthAnchor.constraint(equalToConstant: 38),

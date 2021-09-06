@@ -11,17 +11,6 @@ import UIKit
 class HabitsViewController: UIViewController {
     
     private var store = HabitsStore.shared
-    
-    private enum CellView {
-        case Progress, Habit
-        
-        init(cellIndexPathRow: Int) {
-            switch cellIndexPathRow {
-                case 0: self = .Progress
-                default: self = .Habit
-            }
-        }
-    }
 
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -30,8 +19,8 @@ class HabitsViewController: UIViewController {
         collectionView.backgroundColor = .systemGray6
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(ProgressCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: ProgressCollectionViewCell.self))
         collectionView.register(HabitCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: HabitCollectionViewCell.self))
+        collectionView.register(ProgressCollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: String(describing: ProgressCollectionViewCell.self))
         return collectionView
     }()
     
@@ -82,35 +71,31 @@ extension HabitsViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch CellView(cellIndexPathRow: indexPath.row) {
-        case .Progress:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ProgressCollectionViewCell.self), for: indexPath) as! ProgressCollectionViewCell
-            return cell
-            
-        case .Habit:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HabitCollectionViewCell.self), for: indexPath) as! HabitCollectionViewCell
             cell.habitNameLabel.text = store.habits[indexPath.row].name
-            cell.checkmarkButton.layer.borderColor = store.habits[indexPath.row].color.cgColor
+            cell.checkmarkButton.tintColor = UIColor(cgColor: store.habits[indexPath.row].color.cgColor)
             cell.habitNameLabel.textColor = store.habits[indexPath.row].color
             cell.frequencyTimeLabel.text = store.habits[indexPath.row].dateString
             cell.delegate = self
             cell.checkmarkButton.isUserInteractionEnabled = true
             return cell
-        }
-        
+//        }
     }
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: String(describing: ProgressCollectionViewCell.self), for: indexPath) as! ProgressCollectionViewCell
+        return sectionHeader
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 100)
+    }
+    
+    
 }
 
 extension HabitsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        
-        switch CellView(cellIndexPathRow: indexPath.row) {
-        case .Progress:
-            return CGSize(width: collectionView.frame.width, height: 90)
-        case .Habit:
             return CGSize(width: collectionView.frame.width, height: collectionView.frame.width * 0.350)
-        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -145,7 +130,13 @@ extension HabitsViewController: TapButtonDelegate {
         if let indexPath = collectionView.indexPath(for: cell) {
             print(indexPath)
             cell.checkmarkButton.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
-            cell.checkmarkButton.backgroundColor = UIColor(cgColor: cell.layer.borderColor!)
+            cell.checkmarkButton.backgroundColor = .white
+            let habit = store.habits[indexPath.row]
+            if !habit.isAlreadyTakenToday  {
+                store.track(habit)
+            }
+            cell.counterLabel.text = "Счетчик: \(store.dates.count)"
+            print(store.dates)
             
         }
     }

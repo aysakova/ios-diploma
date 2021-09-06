@@ -89,10 +89,6 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         
         habitNameTextField.delegate = self
         timePickTextField.delegate = self
-        
-//        let indexOFHabit = store.habits.firstIndex(where: ({$0.name == habitNameTextField.text}))
-//        let habit = store.habits[indexOFHabit!]
-//        habit.color = store.habits[indexOFHabit!].color
 
     }
     
