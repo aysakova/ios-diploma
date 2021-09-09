@@ -9,9 +9,10 @@ import UIKit
 
 class BodyInfoTableViewCell: UITableViewCell {
     
-    private lazy var bodyLabel: UILabel = {
+    lazy var bodyLabel: UILabel = {
         let label = UILabel()
-        label.text = AppInfo.myInfo.headerText
+        label.numberOfLines = 0
+        label.font = UIFont(name: "SFProText-Regular", size: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -33,10 +34,10 @@ extension BodyInfoTableViewCell {
         contentView.clipsToBounds = true
         
         let constraints = [
-            bodyLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            bodyLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
-            bodyLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            bodyLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            bodyLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            bodyLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
+            bodyLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            bodyLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6),
         ]
         
         NSLayoutConstraint.activate(constraints)

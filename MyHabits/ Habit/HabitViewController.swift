@@ -11,15 +11,29 @@ protocol AddHabitDelegate {
     func addHabit(habit: Habit)
 }
 
+protocol DeleteHabitDelegate {
+    func deleteHabit(atIndex: IndexPath)
+}
+
+protocol EditHabitDelegate {
+    func editHabit(atIndex: Int)
+}
+
 class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
+    
+    var selectedRow: Int = 0
+    var selectedIndex: IndexPath?
     
     // MARK: Variable declaration
     private var store = HabitsStore.shared
-    var delegate: AddHabitDelegate?
+    var addDelegate: AddHabitDelegate?
+    var deleteDelegate: DeleteHabitDelegate?
+    var editDelegate: EditHabitDelegate?
 
     private var nameLabel: UILabel = {
         let label = UILabel()
         label.text = "НАЗВАНИЕ"
+        label.font = UIFont(name: "SFProText-Semibold", size: 13)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -28,12 +42,15 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         let text = UITextField()
         text.translatesAutoresizingMaskIntoConstraints = false
         text.placeholder = "Бегать по утрам, спать 8 часов и т.п."
+        text.font = UIFont(name: "SFProText-Semibold", size: 17)
+        text.textColor = UIColor(named: "myBlue")
         return text
     }()
     
     private var colorLabel: UILabel = {
         let label = UILabel()
         label.text = "ЦВЕТ"
+        label.font = UIFont(name: "SFProText-Semibold", size: 13)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -49,14 +66,17 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     private var timeLabel: UILabel = {
         let label = UILabel()
         label.text = "ВРЕМЯ"
+        label.font = UIFont(name: "SFProText-Semibold", size: 13)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private var timePickTextField: UITextField = {
+    var timePickTextField: UITextField = {
         let text = UITextField()
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.placeholder = "Выбрать время"
+        text.text = "Каждый день в"
+        text.font = UIFont(name: "SFProText-Regular", size: 17)
+        
         return text
     }()
     
@@ -72,9 +92,11 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     
     private var deleteHabitButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Удалить", for: .normal)
+        button.setTitle("Удалить привычку", for: .normal)
         button.setTitleColor(.red, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(didTapDeleteButton), for: .touchUpInside)
+        button.isUserInteractionEnabled = true
         return button
     }()
     
@@ -102,8 +124,8 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
 
     //MARK: Functions
     private func setupNavigation() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(cancelButtonTapped))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(saveButtonTapped))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(didTapCancelButton))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(didTapSaveButton))
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.navigationBar.tintColor = .purple
     }
@@ -114,26 +136,28 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     }
    
     
-    @objc private func cancelButtonTapped() {
+    @objc private func didTapCancelButton() {
         dismiss(animated: true, completion: nil)
     }
     
-    @objc private func saveButtonTapped() {
+    @objc private func didTapSaveButton() {
         
-        guard let text = habitNameTextField.text, habitNameTextField.hasText else {
+//        guard let text = habitNameTextField.text, habitNameTextField.hasText else {
+        guard habitNameTextField.hasText, timePickTextField.text != "Каждый день в" else {
             print("Ошибка")
             return
         }
-        let newHabit = Habit(name: text, date: Date(), color: colorPickerButton.backgroundColor!)
-        delegate?.addHabit(habit: newHabit)
-        
+        let newHabit = Habit(name: habitNameTextField.text!,
+                             date: timePicker.date, color: colorPickerButton.backgroundColor!)
+        addDelegate?.addHabit(habit: newHabit)
         dismiss(animated: true, completion: nil)
     }
     
-    @objc func timeChanged(timePicker: UIDatePicker) {
+    @objc private func timeChanged(timePicker: UIDatePicker) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mm a"
-        timePickTextField.text = dateFormatter.string(from: timePicker.date)
+        timePickTextField.text = "Каждый день в \(dateFormatter.string(from: timePicker.date))"
+        // TODO: покрасить часть строки
     }
     
     @objc private func viewTapped() {
@@ -144,6 +168,14 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         let colorPickerVC = UIColorPickerViewController()
         colorPickerVC.delegate = self
         self.present(colorPickerVC, animated: true, completion: nil)
+    }
+    
+    @objc private func didTapDeleteButton() {
+        
+        deleteDelegate?.deleteHabit(atIndex: selectedIndex!)
+        print("delete")
+        self.navigationController?.popToRootViewController(animated: true)
+        
     }
     
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
@@ -165,10 +197,6 @@ extension HabitViewController {
         
         colorPickerButton.layer.cornerRadius = 30 / 2
         colorPickerButton.clipsToBounds = true
-        
-        if habitNameTextField.text != nil {
-            view.addSubview(deleteHabitButton)
-        }
         
         let constraints = [
             nameLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
@@ -197,15 +225,16 @@ extension HabitViewController {
             timePicker.topAnchor.constraint(equalTo: timePickTextField.bottomAnchor),
             timePicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             timePicker.heightAnchor.constraint(equalToConstant: 250),
-            
-            deleteHabitButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            deleteHabitButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            deleteHabitButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            deleteHabitButton.heightAnchor.constraint(equalToConstant: 50),
-
         ]
-        
         NSLayoutConstraint.activate(constraints)
+        
+        if !self.habitNameTextField.text!.isEmpty {
+            view.addSubview(deleteHabitButton)
+            NSLayoutConstraint.activate([deleteHabitButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                                        deleteHabitButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                                        deleteHabitButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                                        deleteHabitButton.heightAnchor.constraint(equalToConstant: 50)])
+        }
     }
 }
 

@@ -23,7 +23,6 @@
 		6A258EF826E067C50092767D /* CustomLaunch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6A258EF726E067C50092767D /* CustomLaunch.storyboard */; };
 		6A258EFC26E5C3D70092767D /* SF-Pro-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A258EFB26E5C3750092767D /* SF-Pro-Text-Semibold.otf */; };
 		6A258EFF26E5D5290092767D /* SF-Pro-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A258EFE26E5D4B90092767D /* SF-Pro-Text-Regular.otf */; };
-		6AE63E7D26DE164900438EA4 /* HeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE63E7C26DE164900438EA4 /* HeaderCollectionReusableView.swift */; };
 		6AE63E7F26DE443000438EA4 /* HabitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE63E7E26DE443000438EA4 /* HabitViewController.swift */; };
 		6AE63E8126DE450100438EA4 /* HabitDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE63E8026DE450100438EA4 /* HabitDetailsViewController.swift */; };
 /* End PBXBuildFile section */
@@ -47,9 +46,9 @@
 		6A258EF726E067C50092767D /* CustomLaunch.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CustomLaunch.storyboard; sourceTree = "<group>"; };
 		6A258EFB26E5C3750092767D /* SF-Pro-Text-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Semibold.otf"; sourceTree = "<group>"; };
 		6A258EFE26E5D4B90092767D /* SF-Pro-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Regular.otf"; sourceTree = "<group>"; };
-		6AE63E7C26DE164900438EA4 /* HeaderCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCollectionReusableView.swift; sourceTree = "<group>"; };
 		6AE63E7E26DE443000438EA4 /* HabitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewController.swift; sourceTree = "<group>"; };
 		6AE63E8026DE450100438EA4 /* HabitDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDetailsViewController.swift; sourceTree = "<group>"; };
+		6AF8B59026EA054D0093BBB8 /* SF-Pro-Display-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-Pro-Display-Semibold.otf"; path = "../../../../../../../Library/Fonts/SF-Pro-Display-Semibold.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,7 +82,6 @@
 			isa = PBXGroup;
 			children = (
 				6A085FD526DC8F44008FF55E /* fonts */,
-				6A085FFC26DC963A008FF55E /* HabitStore.swift */,
 				6AE63E7926DE10F600438EA4 /*  Habit */,
 				6A08600826DCB8FF008FF55E /* Habits */,
 				6A08600326DCA85B008FF55E /* Information */,
@@ -101,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				6A258EFE26E5D4B90092767D /* SF-Pro-Text-Regular.otf */,
+				6AF8B59026EA054D0093BBB8 /* SF-Pro-Display-Semibold.otf */,
 				6A258EFB26E5C3750092767D /* SF-Pro-Text-Semibold.otf */,
 				6A085FE226DC8F70008FF55E /* SF-Pro-Display-Regular.otf */,
 			);
@@ -125,7 +124,6 @@
 				6A085FC526DC8F1D008FF55E /* HabitsViewController.swift */,
 				6A08600926DCBF70008FF55E /* ProgressCollectionViewCell.swift */,
 				6A08600B26DCBF84008FF55E /* HabitCollectionViewCell.swift */,
-				6AE63E7C26DE164900438EA4 /* HeaderCollectionReusableView.swift */,
 			);
 			path = Habits;
 			sourceTree = "<group>";
@@ -133,6 +131,7 @@
 		6AE63E7926DE10F600438EA4 /*  Habit */ = {
 			isa = PBXGroup;
 			children = (
+				6A085FFC26DC963A008FF55E /* HabitStore.swift */,
 				6AE63E7E26DE443000438EA4 /* HabitViewController.swift */,
 			);
 			path = " Habit";
@@ -216,7 +215,6 @@
 				6A085FC626DC8F1D008FF55E /* HabitsViewController.swift in Sources */,
 				6A085FC226DC8F1D008FF55E /* AppDelegate.swift in Sources */,
 				6A08600726DCB20B008FF55E /* BodyInfoTableViewCell.swift in Sources */,
-				6AE63E7D26DE164900438EA4 /* HeaderCollectionReusableView.swift in Sources */,
 				6A08600526DCA883008FF55E /* HeaderInfoTableViewCell.swift in Sources */,
 				6A08600A26DCBF70008FF55E /* ProgressCollectionViewCell.swift in Sources */,
 				6AE63E7F26DE443000438EA4 /* HabitViewController.swift in Sources */,

@@ -10,6 +10,8 @@ import UIKit
 
 class InfoViewController: UIViewController {
     
+    private var model = AppInfo.myInfo
+    
     private let tableView = UITableView(frame: .zero, style: .plain)
     
     private enum CellView {
@@ -42,6 +44,8 @@ extension InfoViewController {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
+        tableView.separatorStyle = .none
+        
         let constraints = [
             tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -62,9 +66,11 @@ extension InfoViewController: UITableViewDataSource {
         switch CellView(cellIndexPathRow: indexPath.row) {
         case .Header:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: HeaderInfoTableViewCell.self), for: indexPath) as! HeaderInfoTableViewCell
+            cell.headerLabel.text = model[indexPath.row].text
             return cell
         case .Body:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: BodyInfoTableViewCell.self), for: indexPath) as! BodyInfoTableViewCell
+            cell.bodyLabel.text = model[indexPath.row].text
             return cell
         }
     }

@@ -9,8 +9,6 @@ import UIKit
 
 class ProgressCollectionViewCell: UICollectionViewCell {
     
-    private var habits = HabitsStore.shared
-    
     private lazy var cellBackgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -28,20 +26,19 @@ class ProgressCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private lazy var percentOfCompletionLabel: UILabel = {
+    lazy var percentOfCompletionLabel: UILabel = {
         let label = UILabel()
-//        label.text = "50%"
-        label.font = UIFont(name: "SF-Pro-Text-Semibold", size: 13)
+        label.font = UIFont(name: "SFProText-Semibold", size: 13)
         label.textAlignment = .right
         label.textColor = .systemGray2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private lazy var progressView: UIProgressView = {
+    lazy var progressView: UIProgressView = {
         let progressView = UIProgressView(progressViewStyle: .bar)
         progressView.trackTintColor = .systemGray2
-        progressView.progressTintColor = .purple
+        progressView.progressTintColor = UIColor(named: "myPurple")
         progressView.translatesAutoresizingMaskIntoConstraints = false
         return progressView
     }()
@@ -50,16 +47,17 @@ class ProgressCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
-        configure()
+//        configure()
         
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
-        configure()
+//        configure()
        
     }
+
 }
 
 extension ProgressCollectionViewCell {
@@ -107,7 +105,5 @@ extension ProgressCollectionViewCell {
     }
     
     private func configure() {
-        percentOfCompletionLabel.text = "\(Int(habits.todayProgress * 100))%"
-        progressView.setProgress(habits.todayProgress, animated: true)
     }
 }

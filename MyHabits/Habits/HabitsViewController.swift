@@ -8,9 +8,13 @@
 import Foundation
 import UIKit
 
+
+
 class HabitsViewController: UIViewController {
     
     private var store = HabitsStore.shared
+    
+    var selectedIndexPath: IndexPath?
 
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -30,6 +34,11 @@ class HabitsViewController: UIViewController {
         setupNavigation()
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        collectionView.reloadData()
+    }
 }
 
 extension HabitsViewController {
@@ -40,7 +49,7 @@ extension HabitsViewController {
     
     @objc private func didTapAddButton() {
         let vc = HabitViewController()
-        vc.delegate = self
+        vc.addDelegate = self
         let navVC = UINavigationController(rootViewController: vc)
         vc.title = "Создать"
         self.navigationController?.present(navVC, animated: true, completion: nil)
@@ -83,6 +92,9 @@ extension HabitsViewController: UICollectionViewDataSource {
     }
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: String(describing: ProgressCollectionViewCell.self), for: indexPath) as! ProgressCollectionViewCell
+        sectionHeader.percentOfCompletionLabel.text = "\(Int(store.todayProgress * 100))%"
+        sectionHeader.progressView.setProgress(store.todayProgress, animated: true)
+        print(store.todayProgress)
         return sectionHeader
     }
     
@@ -95,25 +107,29 @@ extension HabitsViewController: UICollectionViewDataSource {
 
 extension HabitsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            return CGSize(width: collectionView.frame.width, height: collectionView.frame.width * 0.350)
+            return CGSize(width: collectionView.frame.width, height: collectionView.frame.width * 0.4)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        6
+        0
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        6
+        0
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
+            //MARK: Transition to Details View Controller
+        let vc = HabitDetailsViewController()
+        vc.title = store.habits[indexPath.row].name
+        vc.selectedIndexPath = indexPath
+        vc.deleteDelegate = self
+        self.navigationController?.pushViewController(vc, animated: true)
         
-        if indexPath.row != 0 {
-            let vc = HabitDetailsViewController()
-            vc.title = store.habits[indexPath.row].name
-            self.navigationController?.pushViewController(vc, animated: true)
-        }
+        selectedIndexPath = indexPath
+        vc.selectedIndexPath = selectedIndexPath
     }
 }
 
@@ -128,20 +144,31 @@ extension HabitsViewController: AddHabitDelegate {
 extension HabitsViewController: TapButtonDelegate {
     func didTapButton(cell: HabitCollectionViewCell) {
         if let indexPath = collectionView.indexPath(for: cell) {
-            print(indexPath)
-            cell.checkmarkButton.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
+    
+            //MARK: Change button to checkmark
+            let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
+            cell.checkmarkButton.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill")?.applyingSymbolConfiguration(configuration), for: .normal)
             cell.checkmarkButton.backgroundColor = .white
+            
+            //MARK: Add date to track and store
             let habit = store.habits[indexPath.row]
             if !habit.isAlreadyTakenToday  {
                 store.track(habit)
             }
-            cell.counterLabel.text = "Счетчик: \(store.dates.count)"
-            print(store.dates)
-            
+            cell.counterLabel.text = "Счетчик: \(1)"
+            collectionView.reloadData()
         }
+    }
+}
+
+extension HabitsViewController: DeleteHabitDelegate {
+    func deleteHabit(atIndex: IndexPath) {
+        store.habits.remove(at: atIndex.row)
+        print(store.habits)
+        collectionView.reloadData()
+        
     }
     
     
     
-    
-}
+  }

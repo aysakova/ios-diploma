@@ -9,9 +9,10 @@ import UIKit
 
 class HeaderInfoTableViewCell: UITableViewCell {
 
-    private lazy var headerLabel: UILabel = {
+    lazy var headerLabel: UILabel = {
         let label = UILabel()
-        label.text = AppInfo.myInfo.headerText
+        label.numberOfLines = 0
+        label.font = UIFont(name: "SFProDisplay-Semibold", size: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -34,10 +35,10 @@ extension HeaderInfoTableViewCell {
         contentView.clipsToBounds = true
         
         let constraints = [
-            headerLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            headerLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
-            headerLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            headerLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            headerLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            headerLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 22),
+            headerLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            headerLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6),
         ]
         
         NSLayoutConstraint.activate(constraints)

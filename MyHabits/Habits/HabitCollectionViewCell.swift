@@ -49,7 +49,8 @@ class HabitCollectionViewCell: UICollectionViewCell {
     
     lazy var checkmarkButton: UIButton = {
         let button = UIButton()
-        button.setBackgroundImage(UIImage(systemName: "circle"), for: .normal)
+        let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .thin)
+        button.setBackgroundImage(UIImage(systemName: "circle")?.applyingSymbolConfiguration(configuration), for: .normal)
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
@@ -97,7 +98,6 @@ extension HabitCollectionViewCell {
             counterLabel.leadingAnchor.constraint(equalTo: cellBackgroundView.leadingAnchor, constant: 12),
             counterLabel.bottomAnchor.constraint(equalTo: cellBackgroundView.bottomAnchor, constant: -20),
             
-//            checkmarkButton.topAnchor.constraint(equalTo: cellBackgroundView.topAnchor, constant: 46),
             checkmarkButton.centerYAnchor.constraint(equalTo: cellBackgroundView.centerYAnchor),
             checkmarkButton.trailingAnchor.constraint(equalTo: cellBackgroundView.trailingAnchor, constant: -25),
             checkmarkButton.heightAnchor.constraint(equalToConstant: 38),

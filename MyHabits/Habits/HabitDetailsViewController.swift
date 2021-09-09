@@ -9,6 +9,9 @@ import UIKit
 
 class HabitDetailsViewController: UIViewController {
     
+    var selectedIndexPath: IndexPath?
+    var deleteDelegate: DeleteHabitDelegate?
+    
     private var habit = HabitsStore.shared
     private lazy var tableView: UITableView = {
         let view = UITableView(frame: .zero, style: .grouped)
@@ -26,14 +29,17 @@ class HabitDetailsViewController: UIViewController {
         setupNavigation()
         
         tableView.tableFooterView = UIView()
+        print(selectedIndexPath!)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+    }
     
     private func setupNavigation() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Править", style: .done, target: self, action: #selector(editButtonTapped))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Править", style: .plain, target: self, action: #selector(editButtonTapped))
         
         navigationItem.largeTitleDisplayMode = .never
-        navigationController?.navigationBar.tintColor = .purple
+        navigationController?.navigationBar.tintColor = UIColor(named: "myPurple")
     }
     @objc private func cancelButtonTapped() {
         self.navigationController?.popViewController(animated: true)
@@ -41,11 +47,14 @@ class HabitDetailsViewController: UIViewController {
     
     @objc private func editButtonTapped() {
         let vc = HabitViewController()
-        let navVC = UINavigationController(rootViewController: vc)
         vc.title = "Править"
-        vc.habitNameTextField.text = self.title
-        
-        self.navigationController?.present(navVC, animated: true, completion: nil)
+        vc.habitNameTextField.text = habit.habits[(selectedIndexPath?.row)!].name
+        vc.colorPickerButton.backgroundColor = habit.habits[(selectedIndexPath?.row)!].color
+        vc.timePickTextField.text = habit.habits[(selectedIndexPath?.row)!].dateString
+        vc.selectedIndex = selectedIndexPath
+        vc.deleteDelegate = HabitsViewController()
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 
 }
@@ -69,14 +78,24 @@ extension HabitDetailsViewController {
 
 extension HabitDetailsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return 4
+        return habit.dates.count
+        
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard habit.dates.count != 0 else { return UITableViewCell()}
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
+            
+        //MARK: Set dates in table
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMMM yyyy"
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+            cell.textLabel?.text = dateFormatter.string(from: habit.dates[indexPath.row])
+        
+        cell.accessoryType = .checkmark
         return cell
     }
     
@@ -87,9 +106,8 @@ extension HabitDetailsViewController: UITableViewDataSource {
 }
 
 extension HabitDetailsViewController: UITableViewDelegate {
-
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 }
-
-
-//
 
