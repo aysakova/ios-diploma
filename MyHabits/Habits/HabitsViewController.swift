@@ -86,7 +86,13 @@ extension HabitsViewController: UICollectionViewDataSource {
             cell.habitNameLabel.textColor = store.habits[indexPath.row].color
             cell.frequencyTimeLabel.text = store.habits[indexPath.row].dateString
             cell.delegate = self
-            cell.checkmarkButton.isUserInteractionEnabled = true
+            
+        if store.habits[indexPath.row].isAlreadyTakenToday {
+            let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
+            cell.checkmarkButton.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill")?.applyingSymbolConfiguration(configuration), for: .normal)
+            cell.checkmarkButton.backgroundColor = .white
+        }
+
             return cell
 //        }
     }
@@ -142,23 +148,24 @@ extension HabitsViewController: AddHabitDelegate {
 }
 
 extension HabitsViewController: TapButtonDelegate {
+    
     func didTapButton(cell: HabitCollectionViewCell) {
         if let indexPath = collectionView.indexPath(for: cell) {
-    
-            //MARK: Change button to checkmark
-            let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
-            cell.checkmarkButton.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill")?.applyingSymbolConfiguration(configuration), for: .normal)
-            cell.checkmarkButton.backgroundColor = .white
+        
+        // MARK: Add today's date to trackDates
+        store.habits[indexPath.row].trackDates.append(Date())
             
-            //MARK: Add date to track and store
-            let habit = store.habits[indexPath.row]
-            if !habit.isAlreadyTakenToday  {
-                store.track(habit)
-            }
-            cell.counterLabel.text = "Счетчик: \(1)"
-            collectionView.reloadData()
-        }
+        // MARK: Configure checkmark button's pressed view
+        let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
+        cell.checkmarkButton.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill")?.applyingSymbolConfiguration(configuration), for: .normal)
+        cell.checkmarkButton.backgroundColor = .white
+            
+        // MARK: Configure counter
+            cell.counterLabel.text = "Счетчик: \(store.habits[indexPath.row].trackDates.count)"
+            
+        collectionView.reloadData()
     }
+}
 }
 
 extension HabitsViewController: DeleteHabitDelegate {

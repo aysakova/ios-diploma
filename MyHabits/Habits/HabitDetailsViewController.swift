@@ -89,13 +89,15 @@ extension HabitDetailsViewController: UITableViewDataSource {
         guard habit.dates.count != 0 else { return UITableViewCell()}
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
             
-        //MARK: Set dates in table
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMMM yyyy"
         dateFormatter.locale = Locale(identifier: "ru_RU")
             cell.textLabel?.text = dateFormatter.string(from: habit.dates[indexPath.row])
         
+        if habit.habit(habit.habits[selectedIndexPath!.row], isTrackedIn: habit.dates[indexPath.row])  {
         cell.accessoryType = .checkmark
+            cell.tintColor = UIColor(named: "myPurple")
+        }
         return cell
     }
     
