@@ -43,7 +43,8 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         text.placeholder = "Бегать по утрам, спать 8 часов и т.п."
         text.font = UIFont(name: "SFProText-Semibold", size: 17)
         text.textColor = UIColor(named: "myBlue")
-        text.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+//
+        
         return text
     }()
     
@@ -140,20 +141,20 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         guard habitNameTextField.hasText, timePickTextField.text != "Каждый день в" else {
             return
         }
-//        if selectedIndex == nil {
+        if selectedIndex == nil {
             let newHabit = Habit(name: habitNameTextField.text!,
                                  date: timePicker.date, color: colorPickerButton.backgroundColor!)
             addDelegate?.addHabit(habit: newHabit)
             dismiss(animated: true, completion: nil)
-//        } else if store.habits[selectedIndex!.row].name == habitNameTextField.text!,
-//                  store.habits[selectedIndex!.row].dateString == timePickTextField.text!,
-//                  store.habits[selectedIndex!.row].color == colorPickerButton.backgroundColor! {
-//                    self.navigationController?.popViewController(animated: true)
-//        } else {
-//            store.habits[selectedIndex!.row].name = habitNameTextField.text!
-//            store.habits[selectedIndex!.row].date = timePicker.date
-//            store.habits[selectedIndex!.row].color = colorPickerButton.backgroundColor!
-//        }
+        } else if store.habits[selectedIndex!.row].name == habitNameTextField.text!,
+                  store.habits[selectedIndex!.row].dateString == timePickTextField.text!,
+                  store.habits[selectedIndex!.row].color == colorPickerButton.backgroundColor! {
+                    self.navigationController?.popViewController(animated: true)
+        } else {
+            store.habits[selectedIndex!.row].name = habitNameTextField.text!
+            store.habits[selectedIndex!.row].date = timePicker.date
+            store.habits[selectedIndex!.row].color = colorPickerButton.backgroundColor!
+        }
     }
     
     @objc private func timeChanged(timePicker: UIDatePicker) {
@@ -177,10 +178,6 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         
         deleteDelegate?.deleteHabit(atIndex: selectedIndex!)
         self.navigationController?.popToRootViewController(animated: true)
-    }
-    
-    @objc private func textFieldDidChange() {
-        
     }
     
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {

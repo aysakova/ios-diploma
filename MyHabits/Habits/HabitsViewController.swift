@@ -44,7 +44,6 @@ class HabitsViewController: UIViewController {
 extension HabitsViewController {
     private func setupNavigation() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAddButton))
-        
     }
     
     @objc private func didTapAddButton() {
@@ -86,8 +85,11 @@ extension HabitsViewController: UICollectionViewDataSource {
             cell.frequencyTimeLabel.text = store.habits[indexPath.row].dateString
             cell.delegate = self
         
+        if cell.habitNameLabel.text == store.habits[indexPath.row].name, store.habits[indexPath.row].isAlreadyTakenToday {
 
-        if store.habit(store.habits[indexPath.row], isTrackedIn: store.dates.last!) {
+//        if store.habit(store.habits[indexPath.row], isTrackedIn: store.dates.last!) {
+//            print(store.dates.last!)
+//            print(store.habits[indexPath.row].trackDates)
             let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
             cell.checkmarkButton.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill")?.applyingSymbolConfiguration(configuration), for: .normal)
             cell.counterLabel.text = "Счетчик: \(store.habits[indexPath.row].trackDates.count)"
@@ -159,7 +161,6 @@ extension HabitsViewController: TapButtonDelegate {
                 let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
                 cell.checkmarkButton.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill")?.applyingSymbolConfiguration(configuration), for: .normal)
                 cell.checkmarkButton.backgroundColor = .white
-
             } 
     }
 }
