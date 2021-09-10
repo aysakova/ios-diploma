@@ -67,13 +67,15 @@ extension InfoViewController: UITableViewDataSource {
         case .Header:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: HeaderInfoTableViewCell.self), for: indexPath) as! HeaderInfoTableViewCell
             cell.headerLabel.text = model[indexPath.row].text
+            cell.selectionStyle = .none
             return cell
         case .Body:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: BodyInfoTableViewCell.self), for: indexPath) as! BodyInfoTableViewCell
             cell.bodyLabel.text = model[indexPath.row].text
+            cell.selectionStyle = .none
             return cell
         }
     }
     
-
 }
+

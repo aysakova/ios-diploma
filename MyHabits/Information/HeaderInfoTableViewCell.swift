@@ -12,7 +12,7 @@ class HeaderInfoTableViewCell: UITableViewCell {
     lazy var headerLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.font = UIFont(name: "SFProDisplay-Semibold", size: 17)
+        label.font = UIFont(name: "SFProText-Semibold", size: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

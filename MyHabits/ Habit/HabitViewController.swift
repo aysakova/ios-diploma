@@ -24,7 +24,6 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     var selectedRow: Int = 0
     var selectedIndex: IndexPath?
     
-    // MARK: Variable declaration
     private var store = HabitsStore.shared
     var addDelegate: AddHabitDelegate?
     var deleteDelegate: DeleteHabitDelegate?
@@ -44,6 +43,7 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         text.placeholder = "Бегать по утрам, спать 8 часов и т.п."
         text.font = UIFont(name: "SFProText-Semibold", size: 17)
         text.textColor = UIColor(named: "myBlue")
+        text.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         return text
     }()
     
@@ -114,14 +114,7 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
 
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-    }
-
     //MARK: Functions
     private func setupNavigation() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(didTapCancelButton))
@@ -137,20 +130,30 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
    
     
     @objc private func didTapCancelButton() {
-        dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
     }
     
     @objc private func didTapSaveButton() {
         
-//        guard let text = habitNameTextField.text, habitNameTextField.hasText else {
+        // MARK: Check if no fields are empty
         guard habitNameTextField.hasText, timePickTextField.text != "Каждый день в" else {
-            print("Ошибка")
             return
         }
-        let newHabit = Habit(name: habitNameTextField.text!,
-                             date: timePicker.date, color: colorPickerButton.backgroundColor!)
-        addDelegate?.addHabit(habit: newHabit)
-        dismiss(animated: true, completion: nil)
+//        if selectedIndex == nil {
+            let newHabit = Habit(name: habitNameTextField.text!,
+                                 date: timePicker.date, color: colorPickerButton.backgroundColor!)
+            addDelegate?.addHabit(habit: newHabit)
+            dismiss(animated: true, completion: nil)
+//        } else if store.habits[selectedIndex!.row].name == habitNameTextField.text!,
+//                  store.habits[selectedIndex!.row].dateString == timePickTextField.text!,
+//                  store.habits[selectedIndex!.row].color == colorPickerButton.backgroundColor! {
+//                    self.navigationController?.popViewController(animated: true)
+//        } else {
+//            store.habits[selectedIndex!.row].name = habitNameTextField.text!
+//            store.habits[selectedIndex!.row].date = timePicker.date
+//            store.habits[selectedIndex!.row].color = colorPickerButton.backgroundColor!
+//        }
     }
     
     @objc private func timeChanged(timePicker: UIDatePicker) {
@@ -173,8 +176,10 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     @objc private func didTapDeleteButton() {
         
         deleteDelegate?.deleteHabit(atIndex: selectedIndex!)
-        print("delete")
         self.navigationController?.popToRootViewController(animated: true)
+    }
+    
+    @objc private func textFieldDidChange() {
         
     }
     

@@ -32,7 +32,7 @@ class HabitsViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         setupNavigation()
-        
+        collectionView.reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,7 +55,6 @@ extension HabitsViewController {
         self.navigationController?.present(navVC, animated: true, completion: nil)
     }
 }
-
 
 extension HabitsViewController {
     private func setupView() {
@@ -86,21 +85,22 @@ extension HabitsViewController: UICollectionViewDataSource {
             cell.habitNameLabel.textColor = store.habits[indexPath.row].color
             cell.frequencyTimeLabel.text = store.habits[indexPath.row].dateString
             cell.delegate = self
-            
-        if store.habits[indexPath.row].isAlreadyTakenToday {
+        
+
+        if store.habit(store.habits[indexPath.row], isTrackedIn: store.dates.last!) {
             let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
             cell.checkmarkButton.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill")?.applyingSymbolConfiguration(configuration), for: .normal)
+            cell.counterLabel.text = "Счетчик: \(store.habits[indexPath.row].trackDates.count)"
             cell.checkmarkButton.backgroundColor = .white
         }
-
             return cell
-//        }
+            
+
     }
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: String(describing: ProgressCollectionViewCell.self), for: indexPath) as! ProgressCollectionViewCell
         sectionHeader.percentOfCompletionLabel.text = "\(Int(store.todayProgress * 100))%"
         sectionHeader.progressView.setProgress(store.todayProgress, animated: true)
-        print(store.todayProgress)
         return sectionHeader
     }
     
@@ -150,20 +150,17 @@ extension HabitsViewController: AddHabitDelegate {
 extension HabitsViewController: TapButtonDelegate {
     
     func didTapButton(cell: HabitCollectionViewCell) {
-        if let indexPath = collectionView.indexPath(for: cell) {
         
-        // MARK: Add today's date to trackDates
-        store.habits[indexPath.row].trackDates.append(Date())
-            
-        // MARK: Configure checkmark button's pressed view
-        let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
-        cell.checkmarkButton.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill")?.applyingSymbolConfiguration(configuration), for: .normal)
-        cell.checkmarkButton.backgroundColor = .white
-            
-        // MARK: Configure counter
-            cell.counterLabel.text = "Счетчик: \(store.habits[indexPath.row].trackDates.count)"
-            
-        collectionView.reloadData()
+        if let indexPath = collectionView.indexPath(for: cell) {
+            if !store.habits[indexPath.row].isAlreadyTakenToday {
+                store.track(store.habits[indexPath.row])
+                collectionView.reloadData()
+                cell.counterLabel.text = "Счетчик: \(store.habits[indexPath.row].trackDates.count)"
+                let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
+                cell.checkmarkButton.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill")?.applyingSymbolConfiguration(configuration), for: .normal)
+                cell.checkmarkButton.backgroundColor = .white
+
+            } 
     }
 }
 }
@@ -171,8 +168,7 @@ extension HabitsViewController: TapButtonDelegate {
 extension HabitsViewController: DeleteHabitDelegate {
     func deleteHabit(atIndex: IndexPath) {
         store.habits.remove(at: atIndex.row)
-        print(store.habits)
-        collectionView.reloadData()
+        collectionView.deleteItems(at: [atIndex])
         
     }
     
