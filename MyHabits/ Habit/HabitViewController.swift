@@ -109,6 +109,13 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         timePickTextField.delegate = self
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+    }
+    
+    
     
     //MARK: Functions
     private func setupNavigation() {
