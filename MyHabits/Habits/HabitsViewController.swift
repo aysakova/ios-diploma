@@ -35,8 +35,8 @@ class HabitsViewController: UIViewController {
         
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         collectionView.reloadData()
     }
     
@@ -80,7 +80,8 @@ extension HabitsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HabitCollectionViewCell.self), for: indexPath) as! HabitCollectionViewCell
-        
+
+    
             cell.habitNameLabel.text = habitArray.habits[indexPath.row].name
             cell.checkmarkButton.tintColor = UIColor(cgColor: habitArray.habits[indexPath.row].color.cgColor)
             cell.habitNameLabel.textColor = habitArray.habits[indexPath.row].color
@@ -160,7 +161,7 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout {
 
 extension HabitsViewController: AddHabitDelegate {
     func addHabit(habit: Habit) {
-        self.dismiss(animated: true, completion: nil)
+//        self.dismiss(animated: true, completion: nil)
         habitArray.habits.append(habit)
         self.collectionView.reloadData()
     }
@@ -169,18 +170,7 @@ extension HabitsViewController: AddHabitDelegate {
 extension HabitsViewController: DeleteHabitDelegate {
     func deleteHabit(atIndex: IndexPath) {
         habitArray.habits.remove(at: atIndex.row)
-        
+        collectionView.reloadData()
     }
   }
 
-extension HabitsViewController: EditHabitDelegate {
-    func editHabit(name: String, dateString: Date, color: UIColor, at index: IndexPath) {
-        print("Do you even enter here?")
-        habitArray.habits[index.row].name = name
-        habitArray.habits[index.row].date = dateString
-        habitArray.habits[index.row].color = color
-    }
-    
-    
-    
-}

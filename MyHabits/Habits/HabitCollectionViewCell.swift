@@ -9,8 +9,6 @@ import UIKit
 
 class HabitCollectionViewCell: UICollectionViewCell {
     
-    var checkedHabit: Habit?
-    
     private lazy var cellBackgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -18,7 +16,9 @@ class HabitCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    lazy var habitNameLabel: UILabel = {
+    var habit: Habit?
+    
+     var habitNameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: "SFProText-Semibold", size: 17)
@@ -26,7 +26,7 @@ class HabitCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var frequencyTimeLabel: UILabel = {
+    var frequencyTimeLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: "SFProText-Regular", size: 13)
@@ -34,7 +34,7 @@ class HabitCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var counterLabel: UILabel = {
+    var counterLabel: UILabel = {
         let label = UILabel()
         label.text = "Счетчик: 0"
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -43,11 +43,8 @@ class HabitCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var checkmarkButton: UIButton = {
+    var checkmarkButton: UIButton = {
         let button = UIButton()
-        let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
-        button.setBackgroundImage(UIImage(systemName: "circle")?.applyingSymbolConfiguration(configuration), for: .normal)
-//        button.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill")?.applyingSymbolConfiguration(configuration), for: .selected)
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -62,7 +59,12 @@ class HabitCollectionViewCell: UICollectionViewCell {
         super.init(coder: coder)
         setupView()
     }
+    
+    override func prepareForReuse() {
+        // SHALL I DO SOMETHING HERE?
+    }
 }
+
 
 extension HabitCollectionViewCell {
     private func setupView() {
@@ -99,4 +101,9 @@ extension HabitCollectionViewCell {
         NSLayoutConstraint.activate(constraints)
     }
     
+    
+    private func configureButton() {
+        let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
+        self.checkmarkButton.setBackgroundImage(UIImage(systemName: "circle")?.applyingSymbolConfiguration(configuration), for: .normal)
+    }
 }

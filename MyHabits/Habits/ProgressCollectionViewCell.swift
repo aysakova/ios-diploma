@@ -9,14 +9,14 @@ import UIKit
 
 class ProgressCollectionViewCell: UICollectionViewCell {
     
-    private lazy var cellBackgroundView: UIView = {
+    private var cellBackgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private lazy var progressMessageLabel: UILabel = {
+    private var progressMessageLabel: UILabel = {
         let label = UILabel()
         label.text = "Все получится!"
         label.font = UIFont(name: "SFProText-Semibold", size: 13)
@@ -26,7 +26,7 @@ class ProgressCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var percentOfCompletionLabel: UILabel = {
+    var percentOfCompletionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "SFProText-Semibold", size: 13)
         label.textAlignment = .right
@@ -35,7 +35,7 @@ class ProgressCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var progressView: UIProgressView = {
+    var progressView: UIProgressView = {
         let progressView = UIProgressView(progressViewStyle: .bar)
         progressView.trackTintColor = .systemGray2
         progressView.progressTintColor = UIColor(named: "myPurple")

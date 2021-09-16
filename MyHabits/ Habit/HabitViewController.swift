@@ -16,13 +16,15 @@ protocol DeleteHabitDelegate {
 }
 
 protocol EditHabitDelegate {
-    func editHabit(name: String, dateString: Date, color: UIColor, at index: IndexPath)
+    func editHabit(editedHabit: Habit, atIndex: IndexPath)
 }
 
 class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
     
     var selectedRow: Int = 0
     var selectedIndex: IndexPath?
+    
+    var habitArray = HabitsStore.shared
     
     private var store = HabitsStore.shared
     var addDelegate: AddHabitDelegate?
@@ -146,15 +148,13 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
                                  date: timePicker.date, color: colorPickerButton.backgroundColor!)
             addDelegate?.addHabit(habit: newHabit)
             dismiss(animated: true, completion: nil)
-        } else if store.habits[selectedIndex!.row].name == habitNameTextField.text!,
-                  store.habits[selectedIndex!.row].dateString == timePickTextField.text!,
-                  store.habits[selectedIndex!.row].color == colorPickerButton.backgroundColor! {
-                    self.navigationController?.popViewController(animated: true)
         } else {
-//            let name = habitNameTextField.text!
-//            let date = timePicker.date
-//            let color = colorPickerButton.backgroundColor!
-//            editDelegate?.editHabit(name: name, dateString: date, color: color, at: selectedIndex!)
+            
+            let habit = Habit(name: habitNameTextField.text!,
+                              date: timePicker.date, color: colorPickerButton.backgroundColor!)
+            
+            habitArray.habits.insert(habit, at: selectedIndex!.row)
+            habitArray.habits.remove(at: selectedIndex!.row + 1)
             self.navigationController?.popToRootViewController(animated: true)
         }
     }
