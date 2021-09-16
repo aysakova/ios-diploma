@@ -29,16 +29,17 @@ class HabitDetailsViewController: UIViewController {
         setupNavigation()
         
         tableView.tableFooterView = UIView()
-        print(selectedIndexPath!)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        navigationItem.largeTitleDisplayMode = .always
     }
     
     private func setupNavigation() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Править", style: .plain, target: self, action: #selector(editButtonTapped))
         
-        navigationItem.largeTitleDisplayMode = .never
+//        navigationItem.largeTitleDisplayMode = .never
+//        navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.tintColor = UIColor(named: "myPurple")
     }
     @objc private func cancelButtonTapped() {
@@ -110,6 +111,10 @@ extension HabitDetailsViewController: UITableViewDataSource {
 extension HabitDetailsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        50
     }
 }
 

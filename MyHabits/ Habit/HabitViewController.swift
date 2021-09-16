@@ -118,6 +118,7 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     }
     
     
+    
     //MARK: Functions
     private func setupNavigation() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(didTapCancelButton))
@@ -153,6 +154,7 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
             let habit = Habit(name: habitNameTextField.text!,
                               date: timePicker.date, color: colorPickerButton.backgroundColor!)
             
+            habit.trackDates = habitArray.habits[selectedIndex!.row].trackDates
             habitArray.habits.insert(habit, at: selectedIndex!.row)
             habitArray.habits.remove(at: selectedIndex!.row + 1)
             self.navigationController?.popToRootViewController(animated: true)
@@ -161,7 +163,7 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     
     @objc private func timeChanged(timePicker: UIDatePicker) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "h:mm a"
+        dateFormatter.dateFormat = "h:mm"
         timePickTextField.text = "Каждый день в \(dateFormatter.string(from: timePicker.date))"
         // TODO: покрасить часть строки
     }
@@ -178,8 +180,17 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     
     @objc private func didTapDeleteButton() {
         
-        deleteDelegate?.deleteHabit(atIndex: selectedIndex!)
-        self.navigationController?.popToRootViewController(animated: true)
+        let alertController = UIAlertController(title: "Удалить привычку", message: "Вы хотите удалить привычку \(habitArray.habits[selectedIndex!.row].name)?", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Отмена", style: .default) { _ in
+            alertController.dismiss(animated: true, completion: nil)
+        }
+        let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { _ in
+            self.deleteDelegate?.deleteHabit(atIndex: self.selectedIndex!)
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(deleteAction)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
@@ -221,9 +232,8 @@ extension HabitViewController {
             timeLabel.topAnchor.constraint(equalTo: colorPickerButton.bottomAnchor, constant: 15),
             
             timePickTextField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            timePickTextField.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 15),
+            timePickTextField.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 7),
             timePickTextField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            timePickTextField.heightAnchor.constraint(equalToConstant: 50),
             
             timePicker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             timePicker.topAnchor.constraint(equalTo: timePickTextField.bottomAnchor),

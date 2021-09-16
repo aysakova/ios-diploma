@@ -16,9 +16,7 @@ class HabitCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    var habit: Habit?
-    
-     var habitNameLabel: UILabel = {
+    var habitNameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: "SFProText-Semibold", size: 17)
@@ -47,6 +45,10 @@ class HabitCollectionViewCell: UICollectionViewCell {
         let button = UIButton()
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(checkButtonClicked(sender:)), for: .touchUpInside)
+        button.setBackgroundImage(UIImage(systemName: "circle"), for: .normal)
+        button.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill"), for: .selected)
+        
         return button
     }()
     
@@ -54,7 +56,7 @@ class HabitCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         setupView()
     }
-
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
@@ -76,7 +78,7 @@ extension HabitCollectionViewCell {
         
         cellBackgroundView.layer.cornerRadius = 8
         cellBackgroundView.clipsToBounds = true
-                
+        
         let constraints = [
             cellBackgroundView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             cellBackgroundView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 12),
@@ -102,8 +104,27 @@ extension HabitCollectionViewCell {
     }
     
     
-    private func configureButton() {
-        let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
-        self.checkmarkButton.setBackgroundImage(UIImage(systemName: "circle")?.applyingSymbolConfiguration(configuration), for: .normal)
+    @objc func checkButtonClicked(sender: UIButton) {
+        if sender.isSelected {
+            sender.isSelected = false
+        } else {
+            sender.isSelected = true
+            sender.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill"), for: .selected)
+            // MARK: Getting indexPath.row of button's superview cell
+            //            var superview = sender.superview
+            //            while let view = superview, !(view is UICollectionViewCell) {
+            //                superview = view.superview
+            //            }
+            //            guard let cell = superview as? UICollectionViewCell else {
+            //                return
+        }
+        //            guard let indexPath = collectionView.indexPath(for: cell) else {
+        //                return
+        //            }
+        //            print("button is in row \(indexPath.row)")
+        //
+        //            if !habitArray.habits[indexPath.row].isAlreadyTakenToday {
+        //                habitArray.track(habitArray.habits[indexPath.row])
+        //            }
     }
 }
