@@ -164,7 +164,14 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     @objc private func timeChanged(timePicker: UIDatePicker) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mm"
-        timePickTextField.text = "Каждый день в \(dateFormatter.string(from: timePicker.date))"
+        
+        let text = "Каждый день в \(dateFormatter.string(from: timePicker.date))"
+        let range = (text as NSString).range(of: "Каждый день в ")
+        let attrbutedString = NSMutableAttributedString(string: text)
+        attrbutedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.black, range: range)
+        timePickTextField.textColor = UIColor(named: "myPurple")
+        timePickTextField.attributedText = attrbutedString
+
         // TODO: покрасить часть строки
     }
     

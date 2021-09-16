@@ -51,7 +51,15 @@ class HabitDetailsViewController: UIViewController {
         vc.title = "Править"
         vc.habitNameTextField.text = habit.habits[(selectedIndexPath?.row)!].name
         vc.colorPickerButton.backgroundColor = habit.habits[(selectedIndexPath?.row)!].color
-        vc.timePickTextField.text = habit.habits[(selectedIndexPath?.row)!].dateString
+        
+        
+        let text = habit.habits[(selectedIndexPath?.row)!].dateString
+        let range = (text as NSString).range(of: "Каждый день в ")
+        let attrbutedString = NSMutableAttributedString(string: text)
+        attrbutedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.black, range: range)
+        vc.timePickTextField.textColor = UIColor(named: "myPurple")
+        vc.timePickTextField.attributedText = attrbutedString
+        
         vc.selectedIndex = selectedIndexPath
         vc.deleteDelegate = HabitsViewController()
         vc.hidesBottomBarWhenPushed = true
