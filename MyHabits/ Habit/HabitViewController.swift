@@ -112,6 +112,8 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     
     //MARK: Functions
     private func setupNavigation() {
+        navigationItem.largeTitleDisplayMode = .never
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(didTapCancelButton))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(didTapSaveButton))
         navigationController?.navigationBar.tintColor = .purple
@@ -238,7 +240,8 @@ extension HabitViewController {
         ]
         NSLayoutConstraint.activate(constraints)
         
-        if !self.habitNameTextField.text!.isEmpty {
+//        if !self.habitNameTextField.text!.isEmpty {
+            if selectedIndex != nil {
             view.addSubview(deleteHabitButton)
             NSLayoutConstraint.activate([deleteHabitButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
                                         deleteHabitButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
@@ -252,5 +255,5 @@ extension HabitViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         habitNameTextField.resignFirstResponder()
         return true
-    }    
+    }
 }
