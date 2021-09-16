@@ -15,10 +15,6 @@ protocol DeleteHabitDelegate {
     func deleteHabit(atIndex: IndexPath)
 }
 
-protocol EditHabitDelegate {
-    func editHabit(editedHabit: Habit, atIndex: IndexPath)
-}
-
 class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
     
     var selectedRow: Int = 0
@@ -29,7 +25,6 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
     private var store = HabitsStore.shared
     var addDelegate: AddHabitDelegate?
     var deleteDelegate: DeleteHabitDelegate?
-    var editDelegate: EditHabitDelegate?
 
     private var nameLabel: UILabel = {
         let label = UILabel()
@@ -45,8 +40,6 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         text.placeholder = "Бегать по утрам, спать 8 часов и т.п."
         text.font = UIFont(name: "SFProText-Semibold", size: 17)
         text.textColor = UIColor(named: "myBlue")
-//
-        
         return text
     }()
     
@@ -114,16 +107,13 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         
         habitNameTextField.delegate = self
         timePickTextField.delegate = self
-
     }
-    
     
     
     //MARK: Functions
     private func setupNavigation() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(didTapCancelButton))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(didTapSaveButton))
-        navigationItem.largeTitleDisplayMode = .never
         navigationController?.navigationBar.tintColor = .purple
     }
     
@@ -171,14 +161,13 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
         attrbutedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.black, range: range)
         timePickTextField.textColor = UIColor(named: "myPurple")
         timePickTextField.attributedText = attrbutedString
-
-        // TODO: покрасить часть строки
     }
     
     @objc private func viewTapped() {
         view.endEditing(true)
     }
 
+    
     @objc private func chooseColor() {
         let colorPickerVC = UIColorPickerViewController()
         colorPickerVC.delegate = self
@@ -263,6 +252,5 @@ extension HabitViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         habitNameTextField.resignFirstResponder()
         return true
-    }
-    
+    }    
 }

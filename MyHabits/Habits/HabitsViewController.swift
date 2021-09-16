@@ -12,6 +12,9 @@ import UIKit
 
 class HabitsViewController: UIViewController {
     
+    
+    //MARK: Variable declaration
+    
     private var habitArray = HabitsStore.shared
     
     var selectedIndexPath: IndexPath? // index to pass to details and habit view controllers
@@ -27,25 +30,33 @@ class HabitsViewController: UIViewController {
         collectionView.register(ProgressCollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: String(describing: ProgressCollectionViewCell.self))
         return collectionView
     }()
+ 
     
+    
+    
+    //MARK: Lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setupNavigation()
         
     }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationItem.largeTitleDisplayMode = .always
         collectionView.reloadData()
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.sizeToFit()
+        navigationController?.navigationItem.largeTitleDisplayMode = .always
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
 }
 
+//MARK: Navigation bar initial setup
 extension HabitsViewController {
     private func setupNavigation() {
-        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAddButton))
     }
     
@@ -58,6 +69,7 @@ extension HabitsViewController {
     }
 }
 
+//MARK: Initial view setup
 extension HabitsViewController {
     private func setupView() {
         view.addSubview(collectionView)
@@ -74,7 +86,7 @@ extension HabitsViewController {
         
     }
 }
-
+// MARK: Data source methods
 extension HabitsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return habitArray.habits.count
@@ -82,8 +94,7 @@ extension HabitsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HabitCollectionViewCell.self), for: indexPath) as! HabitCollectionViewCell
-        
-        
+                
         cell.habitNameLabel.text = habitArray.habits[indexPath.row].name
         cell.checkmarkButton.tintColor = UIColor(cgColor: habitArray.habits[indexPath.row].color.cgColor)
         cell.habitNameLabel.textColor = habitArray.habits[indexPath.row].color
@@ -93,6 +104,9 @@ extension HabitsViewController: UICollectionViewDataSource {
         cell.checkmarkButton.addTarget(self, action: #selector(checkButtonClicked), for: .touchUpInside)
         return cell
     }
+    
+    
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: String(describing: ProgressCollectionViewCell.self), for: indexPath) as! ProgressCollectionViewCell
         sectionHeader.percentOfCompletionLabel.text = "\(Int(habitArray.todayProgress * 100))%"
@@ -100,12 +114,16 @@ extension HabitsViewController: UICollectionViewDataSource {
         return sectionHeader
     }
     
+    
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 80)
     }
     
 }
 
+
+// MARK: Flow delegate methods
 extension HabitsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 130)
@@ -126,7 +144,6 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout {
         vc.title = habitArray.habits[indexPath.row].name
         vc.selectedIndexPath = indexPath
         vc.deleteDelegate = self
-        navigationItem.largeTitleDisplayMode = .never
         self.navigationController?.pushViewController(vc, animated: true)
         
         selectedIndexPath = indexPath
@@ -135,6 +152,8 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+
+// MARK: Add new habit delegate method
 extension HabitsViewController: AddHabitDelegate {
     func addHabit(habit: Habit) {
         //        self.dismiss(animated: true, completion: nil)
@@ -143,6 +162,8 @@ extension HabitsViewController: AddHabitDelegate {
     }
 }
 
+
+// MARK: Delete habit delegate method
 extension HabitsViewController: DeleteHabitDelegate {
     func deleteHabit(atIndex: IndexPath) {
         habitArray.habits.remove(at: atIndex.row)
@@ -150,6 +171,8 @@ extension HabitsViewController: DeleteHabitDelegate {
     }
 }
 
+
+// MARK: Circle button tap 
 extension HabitsViewController {
     @objc func checkButtonClicked(sender: UIButton) {
         if sender.isSelected == false {

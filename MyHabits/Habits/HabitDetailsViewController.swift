@@ -8,11 +8,14 @@
 import UIKit
 
 class HabitDetailsViewController: UIViewController {
-    
+
+
+    //MARK: Variable declaration
     var selectedIndexPath: IndexPath?
     var deleteDelegate: DeleteHabitDelegate?
     
     private var habit = HabitsStore.shared
+    
     private lazy var tableView: UITableView = {
         let view = UITableView(frame: .zero, style: .grouped)
         view.dataSource = self
@@ -20,6 +23,8 @@ class HabitDetailsViewController: UIViewController {
         return view
     }()
     
+    
+    //MARK: Lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -32,16 +37,21 @@ class HabitDetailsViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
     }
-    
+
+}
+
+//MARK: Naigation initial setup
+extension HabitDetailsViewController {
     private func setupNavigation() {
+        navigationItem.largeTitleDisplayMode = .never
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Править", style: .plain, target: self, action: #selector(editButtonTapped))
-        
-//        navigationItem.largeTitleDisplayMode = .never
-//        navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.tintColor = UIColor(named: "myPurple")
     }
+    
     @objc private func cancelButtonTapped() {
         self.navigationController?.popViewController(animated: true)
     }
@@ -65,9 +75,9 @@ class HabitDetailsViewController: UIViewController {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-
 }
 
+//MARK: Initial view setup
 extension HabitDetailsViewController {
     private func setupView() {
         
@@ -85,15 +95,18 @@ extension HabitDetailsViewController {
     }
 }
 
+
+// MARK: Data source methods
 extension HabitDetailsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return habit.dates.count
-        
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
+    
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard habit.dates.count != 0 else { return UITableViewCell()}
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
@@ -116,6 +129,7 @@ extension HabitDetailsViewController: UITableViewDataSource {
     }
 }
 
+// MARK: Table delegate methods
 extension HabitDetailsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

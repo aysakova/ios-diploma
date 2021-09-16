@@ -30,8 +30,8 @@
             <objects>
                 <navigationController title="Привычки" id="9IK-my-LSy" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Привычки" image="Shape" id="waF-dr-MSm"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="b07-pW-Vrz">
-                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="b07-pW-Vrz">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.63137254899999995" green="0.086274509799999996" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <textAttributes key="titleTextAttributes">
