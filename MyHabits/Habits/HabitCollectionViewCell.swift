@@ -7,13 +7,9 @@
 
 import UIKit
 
-protocol TapButtonDelegate {
-    func didTapButton(cell: HabitCollectionViewCell)
-}
-
 class HabitCollectionViewCell: UICollectionViewCell {
     
-    var delegate: TapButtonDelegate?
+    var checkedHabit: Habit?
     
     private lazy var cellBackgroundView: UIView = {
         let view = UIView()
@@ -49,17 +45,13 @@ class HabitCollectionViewCell: UICollectionViewCell {
     
     lazy var checkmarkButton: UIButton = {
         let button = UIButton()
-        let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .thin)
+        let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
         button.setBackgroundImage(UIImage(systemName: "circle")?.applyingSymbolConfiguration(configuration), for: .normal)
+//        button.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill")?.applyingSymbolConfiguration(configuration), for: .selected)
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
         return button
     }()
-    
-    @objc func didTapButton(_ sender: UIButton) {
-        delegate?.didTapButton(cell: self)
-    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -85,7 +77,7 @@ extension HabitCollectionViewCell {
                 
         let constraints = [
             cellBackgroundView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            cellBackgroundView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 22),
+            cellBackgroundView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 12),
             cellBackgroundView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             cellBackgroundView.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor),
             

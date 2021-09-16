@@ -16,7 +16,7 @@ protocol DeleteHabitDelegate {
 }
 
 protocol EditHabitDelegate {
-    func editHabit(atIndex: Int)
+    func editHabit(name: String, dateString: Date, color: UIColor, at index: IndexPath)
 }
 
 class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
@@ -151,9 +151,11 @@ class HabitViewController: UIViewController, UIColorPickerViewControllerDelegate
                   store.habits[selectedIndex!.row].color == colorPickerButton.backgroundColor! {
                     self.navigationController?.popViewController(animated: true)
         } else {
-            store.habits[selectedIndex!.row].name = habitNameTextField.text!
-            store.habits[selectedIndex!.row].date = timePicker.date
-            store.habits[selectedIndex!.row].color = colorPickerButton.backgroundColor!
+//            let name = habitNameTextField.text!
+//            let date = timePicker.date
+//            let color = colorPickerButton.backgroundColor!
+//            editDelegate?.editHabit(name: name, dateString: date, color: color, at: selectedIndex!)
+            self.navigationController?.popToRootViewController(animated: true)
         }
     }
     

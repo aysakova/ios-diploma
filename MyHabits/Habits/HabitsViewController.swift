@@ -12,10 +12,10 @@ import UIKit
 
 class HabitsViewController: UIViewController {
     
-    private var store = HabitsStore.shared
+    private var habitArray = HabitsStore.shared
     
-    var selectedIndexPath: IndexPath?
-
+    var selectedIndexPath: IndexPath? // index to pass to details and habit view controllers
+    
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -32,13 +32,14 @@ class HabitsViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         setupNavigation()
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         collectionView.reloadData()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        collectionView.reloadData()
-    }
 }
 
 extension HabitsViewController {
@@ -74,35 +75,24 @@ extension HabitsViewController {
 
 extension HabitsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return store.habits.count
+        return habitArray.habits.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HabitCollectionViewCell.self), for: indexPath) as! HabitCollectionViewCell
-            cell.habitNameLabel.text = store.habits[indexPath.row].name
-            cell.checkmarkButton.tintColor = UIColor(cgColor: store.habits[indexPath.row].color.cgColor)
-            cell.habitNameLabel.textColor = store.habits[indexPath.row].color
-            cell.frequencyTimeLabel.text = store.habits[indexPath.row].dateString
-            cell.delegate = self
         
-        if cell.habitNameLabel.text == store.habits[indexPath.row].name, store.habits[indexPath.row].isAlreadyTakenToday {
-
-//        if store.habit(store.habits[indexPath.row], isTrackedIn: store.dates.last!) {
-//            print(store.dates.last!)
-//            print(store.habits[indexPath.row].trackDates)
-            let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
-            cell.checkmarkButton.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill")?.applyingSymbolConfiguration(configuration), for: .normal)
-            cell.counterLabel.text = "Счетчик: \(store.habits[indexPath.row].trackDates.count)"
-            cell.checkmarkButton.backgroundColor = .white
-        }
+            cell.habitNameLabel.text = habitArray.habits[indexPath.row].name
+            cell.checkmarkButton.tintColor = UIColor(cgColor: habitArray.habits[indexPath.row].color.cgColor)
+            cell.habitNameLabel.textColor = habitArray.habits[indexPath.row].color
+            cell.frequencyTimeLabel.text = habitArray.habits[indexPath.row].dateString
+            cell.counterLabel.text = "Счетчик: \(habitArray.habits[indexPath.row].trackDates.count.description)"
+            cell.checkmarkButton.addTarget(self, action: #selector(checkButtonClicked(sender: )), for: .touchUpInside)
             return cell
-            
-
-    }
+}
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: String(describing: ProgressCollectionViewCell.self), for: indexPath) as! ProgressCollectionViewCell
-        sectionHeader.percentOfCompletionLabel.text = "\(Int(store.todayProgress * 100))%"
-        sectionHeader.progressView.setProgress(store.todayProgress, animated: true)
+        sectionHeader.percentOfCompletionLabel.text = "\(Int(habitArray.todayProgress * 100))%"
+        sectionHeader.progressView.setProgress(habitArray.todayProgress, animated: true)
         return sectionHeader
     }
     
@@ -110,6 +100,32 @@ extension HabitsViewController: UICollectionViewDataSource {
         return CGSize(width: collectionView.frame.width, height: 100)
     }
     
+    @objc func checkButtonClicked(sender: UIButton) {
+        if sender.isSelected {
+            sender.isSelected = false
+        } else {
+            sender.isSelected = true
+            sender.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill"), for: .selected)
+            // MARK: Getting indexPath.row of button's superview cell
+            var superview = sender.superview
+            while let view = superview, !(view is UICollectionViewCell) {
+                superview = view.superview
+            }
+            guard let cell = superview as? UICollectionViewCell else {
+                print("button is not contained in a table view cell")
+                return
+            }
+            guard let indexPath = collectionView.indexPath(for: cell) else {
+                print("failed to get index path for cell containing button")
+                return
+            }
+            print("button is in row \(indexPath.row)")
+            
+            if !habitArray.habits[indexPath.row].isAlreadyTakenToday {
+                habitArray.track(habitArray.habits[indexPath.row])
+            }
+        }
+    }
     
 }
 
@@ -128,51 +144,43 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-            //MARK: Transition to Details View Controller
+        //MARK: Transition to Details View Controller
         let vc = HabitDetailsViewController()
-        vc.title = store.habits[indexPath.row].name
+        vc.title = habitArray.habits[indexPath.row].name
         vc.selectedIndexPath = indexPath
         vc.deleteDelegate = self
         self.navigationController?.pushViewController(vc, animated: true)
         
         selectedIndexPath = indexPath
         vc.selectedIndexPath = selectedIndexPath
+        print(selectedIndexPath!)
+        print(vc.selectedIndexPath!)
     }
 }
 
 extension HabitsViewController: AddHabitDelegate {
     func addHabit(habit: Habit) {
         self.dismiss(animated: true, completion: nil)
-        store.habits.append(habit)
+        habitArray.habits.append(habit)
         self.collectionView.reloadData()
     }
 }
 
-extension HabitsViewController: TapButtonDelegate {
-    
-    func didTapButton(cell: HabitCollectionViewCell) {
-        
-        if let indexPath = collectionView.indexPath(for: cell) {
-            if !store.habits[indexPath.row].isAlreadyTakenToday {
-                store.track(store.habits[indexPath.row])
-                collectionView.reloadData()
-                cell.counterLabel.text = "Счетчик: \(store.habits[indexPath.row].trackDates.count)"
-                let configuration = UIImage.SymbolConfiguration(pointSize: 38, weight: .light)
-                cell.checkmarkButton.setBackgroundImage(UIImage(systemName: "checkmark.circle.fill")?.applyingSymbolConfiguration(configuration), for: .normal)
-                cell.checkmarkButton.backgroundColor = .white
-            } 
-    }
-}
-}
-
 extension HabitsViewController: DeleteHabitDelegate {
     func deleteHabit(atIndex: IndexPath) {
-        store.habits.remove(at: atIndex.row)
-        collectionView.deleteItems(at: [atIndex])
+        habitArray.habits.remove(at: atIndex.row)
         
+    }
+  }
+
+extension HabitsViewController: EditHabitDelegate {
+    func editHabit(name: String, dateString: Date, color: UIColor, at index: IndexPath) {
+        print("Do you even enter here?")
+        habitArray.habits[index.row].name = name
+        habitArray.habits[index.row].date = dateString
+        habitArray.habits[index.row].color = color
     }
     
     
     
-  }
+}

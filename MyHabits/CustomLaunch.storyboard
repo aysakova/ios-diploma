@@ -21,27 +21,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch" translatesAutoresizingMaskIntoConstraints="NO" id="070-Cn-vdh">
-                                <rect key="frame" x="147" y="388" width="120" height="120"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="120" id="9CB-rP-dbF"/>
-                                    <constraint firstAttribute="width" constant="120" id="gSM-wM-TSK"/>
-                                </constraints>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MyHabits" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VzP-75-TYw">
                                 <rect key="frame" x="166.5" y="778" width="81" height="24"/>
                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="20"/>
                                 <color key="textColor" red="0.63137254899999995" green="0.086274509799999996" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="main" translatesAutoresizingMaskIntoConstraints="NO" id="N0J-dG-vc1">
+                                <rect key="frame" x="147" y="388" width="120" height="120"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="JR8-nj-l2f"/>
+                                    <constraint firstAttribute="height" constant="120" id="Uva-Q1-WmJ"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="070-Cn-vdh" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="7MQ-Ye-R7s"/>
                             <constraint firstItem="VzP-75-TYw" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="FTj-ps-40Q"/>
+                            <constraint firstItem="N0J-dG-vc1" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="JvL-HA-G0f"/>
+                            <constraint firstItem="N0J-dG-vc1" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="QG1-tm-YJm"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="VzP-75-TYw" secondAttribute="bottom" constant="60" id="kYQ-ko-onX"/>
-                            <constraint firstItem="070-Cn-vdh" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="lBC-XW-Lgw"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -51,7 +51,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="launch" width="83.5" height="83.5"/>
+        <image name="main" width="120" height="120"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
